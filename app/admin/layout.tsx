@@ -1,5 +1,3 @@
-
-
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { hasEnvVars } from "@/lib/utils";
@@ -8,6 +6,12 @@ import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { createClient } from "@/lib/supabase/client";
 
+/**
+ * Renders the admin page layout with top navigation, main content area, and footer; displays an environment-variable warning when required vars are missing or authentication controls otherwise.
+ *
+ * @param children - Content rendered inside the layout's main area.
+ * @returns The complete admin layout element.
+ */
 export default function AdminLayout({
   children,
 }: {

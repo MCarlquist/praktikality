@@ -7,6 +7,15 @@ const hasEnvVars =
   process.env.NEXT_PUBLIC_SUPABASE_URL &&
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
+/**
+ * Ensures the Supabase session is synchronized with the incoming Next.js request and enforces route access based on authentication and admin status.
+ *
+ * @param request - The incoming Next.js request used to read cookies, URL path, and evaluate the current Supabase session
+ * @returns A NextResponse that has Supabase cookies synchronized with the request and may be a redirect:
+ * - Redirects to "/auth/login" when the request path is not "/" and there is no authenticated session, excluding paths starting with "/login" or "/auth".
+ * - Redirects to "/" when the request path starts with "/admin" and the current user is not an admin.
+ * - Otherwise returns a response preserving the request with any cookies set by the Supabase client.
+ */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,

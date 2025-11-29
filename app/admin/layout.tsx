@@ -8,6 +8,12 @@ import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { TopNav } from "@/components/admin/top-nav";
 
+/**
+ * Provides the admin page frame with top navigation, a right-side env/auth area, a content container, and footer.
+ *
+ * @param children - The content rendered inside the layout's main content area
+ * @returns The layout element containing the header (brand link and environment/auth controls), the TopNav, the content container with `children`, and the Footer
+ */
 export default function AdminLayout({
   children,
 }: {

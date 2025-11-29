@@ -167,6 +167,11 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
+/**
+ * Renders a configurable data table for payments with sorting, filtering, pagination, column visibility, and row selection controls.
+ *
+ * @returns The rendered DataTable JSX element.
+ */
 export function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

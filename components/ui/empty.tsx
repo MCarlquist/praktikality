@@ -2,6 +2,12 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Renders a container element for empty states with default layout and styling.
+ *
+ * @param props - Props forwarded to the underlying `div`. Use `className` to add or override classes.
+ * @returns A `div` element that serves as the empty-state container.
+ */
 function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -15,6 +21,11 @@ function Empty({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Renders the header slot for an empty state.
+ *
+ * @returns A div element with `data-slot="empty-header"` and centered layout/alignment classes; any provided props are applied to the element.
+ */
 function EmptyHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -43,6 +54,14 @@ const emptyMediaVariants = cva(
   }
 )
 
+/**
+ * Renders the empty-state media container with selectable variant styling.
+ *
+ * @param variant - Visual variant for the media container. Supported values: `"default"` (transparent background) and `"icon"` (sized, rounded icon background with centered content).
+ * @param className - Additional CSS class names to merge with the component's default classes.
+ * @param props - Additional props are spread onto the underlying `div` element.
+ * @returns The rendered `div` element for the empty-state media slot.
+ */
 function EmptyMedia({
   className,
   variant = "default",
@@ -58,6 +77,11 @@ function EmptyMedia({
   )
 }
 
+/**
+ * Renders the title area for an empty state with preset typography styles.
+ *
+ * @returns A div element serving as the empty-state title slot.
+ */
 function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -68,6 +92,11 @@ function EmptyTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Renders the description area for an empty state with muted text and styled links.
+ *
+ * @returns A div element with data-slot="empty-description" containing the description content and link styling
+ */
 function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <div
@@ -81,6 +110,13 @@ function EmptyDescription({ className, ...props }: React.ComponentProps<"p">) {
   )
 }
 
+/**
+ * Container for empty-state content that centers children and applies layout and typography classes.
+ *
+ * @param className - Additional CSS class names to merge with the component's default classes
+ * @param props - Additional attributes and event handlers forwarded to the root `div`
+ * @returns The rendered `div` element used as the empty-state content container
+ */
 function EmptyContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

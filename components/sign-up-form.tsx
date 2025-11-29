@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {v4 as uuidv4} from 'uuid';
+
 
 export function SignUpForm({
   className,
@@ -40,17 +42,34 @@ export function SignUpForm({
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/protected`,
         },
       });
+
       if (error) throw error;
+      console.log('Sign-up data:', data);
+      
+
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          { id: data.user?.id, role: 'user', email },
+        ])
+        .select();
+
+      if (profileError) {
+        setError(profileError.message);
+      }
+
+
+
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(error instanceof Error ? error.message : "Sorry , something went wrong");
     } finally {
       setIsLoading(false);
     }

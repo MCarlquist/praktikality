@@ -6,6 +6,7 @@ import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
+import { TopNav } from "@/components/admin/top-nav";
 
 export default function AdminLayout({
   children,
@@ -29,6 +30,7 @@ export default function AdminLayout({
             )}
           </div>
         </nav>
+          <TopNav />
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           {children}
         </div>

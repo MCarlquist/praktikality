@@ -2,9 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
 /**
- * Especially important if using Fluid compute: Don't put this client in a
- * global variable. Always create a new client within each function when using
- * it.
+ * Create a new server-side Supabase client configured to use Next.js server cookies.
+ *
+ * Do not store the returned client in a global variable; create a new client for each invocation.
+ *
+ * @returns A Supabase client instance configured for server-side use and cookie-backed session handling (uses NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY).
  */
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies();

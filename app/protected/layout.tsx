@@ -1,4 +1,3 @@
-
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -7,6 +6,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 
+/**
+ * Layout that wraps protected pages with a header, centered content area, and footer.
+ *
+ * @param children - The content to render inside the layout's main area.
+ * @returns A JSX element containing a header with the site link and either an environment-variable warning or authentication button, a centered content container for `children`, and a footer.
+ */
 export default function ProtectedLayout({
   children,
 }: {

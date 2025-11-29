@@ -7,6 +7,12 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 
+/**
+ * Layout component that renders the app shell with a navigation header, main content area, and footer.
+ *
+ * @param children - Content to render inside the layout's main content area
+ * @returns The layout element containing the header (brand link and either an environment-variable warning or an authentication button), the provided children, and the footer
+ */
 export default function ProtectedLayout({
   children,
 }: {

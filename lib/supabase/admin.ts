@@ -6,7 +6,12 @@ const supabase = createClient();
 
 // TODO: Make this work.
 
-// function that checks if the user is an admin
+/**
+ * Checks whether a user has the "admin" role (currently returns `true` unconditionally for testing).
+ *
+ * @param userId - The profile ID of the user to check
+ * @returns `true` if the user's role is `"admin"`, `false` otherwise. Note: the current implementation always returns `true`.
+ */
 export async function isAdmin(userId: string): Promise<boolean> {
   // query the profile row and check the role
   const { data, error } = await supabase

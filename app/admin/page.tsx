@@ -1,6 +1,11 @@
 import { InfoIcon } from "lucide-react";
 
 
+/**
+ * Renders the admin dashboard layout.
+ *
+ * @returns The JSX element for the admin dashboard layout, including a heading and descriptive paragraph.
+ */
 export default function AdminPage() {
   return (
     <div className="flex-1 w-full flex flex-col gap-12">

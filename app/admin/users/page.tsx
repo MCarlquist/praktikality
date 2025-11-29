@@ -1,5 +1,8 @@
-
-
+/**
+ * Renders the Users admin page with a heading and a short description for managing user details.
+ *
+ * @returns The JSX layout: a container with a "User Page Admin" heading and a paragraph welcoming the user to manage user details.
+ */
 export default function UsersAdminPage() {
     return (
         <div className="flex-1 w-full flex flex-col gap-12">

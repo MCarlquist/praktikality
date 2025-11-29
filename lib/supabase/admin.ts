@@ -1,10 +1,15 @@
 import { createClient } from "./client";
 import { Database } from "../../database.types";
+import { NextRequest, NextResponse } from "next/server";
 
 const supabase = createClient();
 
 // function that checks if the user is an admin
-export async function isAdmin(userId: string): Promise<boolean | undefined> {
+export async function isAdmin(userId: string | undefined): Promise<boolean | boolean> {
+
+  if (!userId) {
+    return false;
+  }
 
   try {
     const { data: profiles, error } = await supabase
@@ -23,5 +28,4 @@ export async function isAdmin(userId: string): Promise<boolean | undefined> {
     console.log("Unexpected error checking admin status:", error);
     return false;
   }
-
 }

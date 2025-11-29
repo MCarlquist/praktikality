@@ -4,9 +4,10 @@ import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTit
 type EmptyAreaProps = {
     title: React.ReactNode;
     description?: React.ReactNode;
+    cta?: React.ReactNode;
 };
 
-export default function EmptyArea({ title, description }: EmptyAreaProps) {
+export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {
     return (
         <div className="flex-1 w-full flex flex-col gap-12">
             <Empty>
@@ -21,20 +22,9 @@ export default function EmptyArea({ title, description }: EmptyAreaProps) {
                 </EmptyHeader>
                 <EmptyContent>
                     <div className="flex gap-2">
-                        <Button>Create Project</Button>
-                        <Button variant="outline">Import Project</Button>
+                        <Button variant={'outline'}>{ cta }</Button>
                     </div>
                 </EmptyContent>
-                <Button
-                    variant="link"
-                    asChild
-                    className="text-muted-foreground"
-                    size="sm"
-                >
-                    <a href="#">
-                        Learn More <ArrowUpRightIcon />
-                    </a>
-                </Button>
             </Empty>
         </div>
     );

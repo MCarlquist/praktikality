@@ -14,7 +14,6 @@ export async function AuthButton() {
 
   // check if Admin
   const admin = await isAdmin(user?.sub!);
-  console.log(admin);
   
   return user ? (
     <div className="flex items-center gap-4">

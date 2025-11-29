@@ -4,6 +4,11 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { LogoutButton } from "./logout-button";
 import { isAdmin } from "@/lib/supabase/admin";
 
+/**
+ * Render authentication UI based on the current user's presence and admin role.
+ *
+ * @returns A JSX element that displays a greeting with an optional "Admin" link and a logout control when a user is authenticated, or "Sign in" and "Sign up" buttons when no user is authenticated.
+ */
 export async function AuthButton() {
   const supabase = await createServerSupabaseClient();
 

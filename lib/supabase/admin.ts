@@ -4,7 +4,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 const supabase = createClient();
 
-// function that checks if the user is an admin
+/**
+ * Determine whether a user has the 'admin' role.
+ *
+ * @param userId - The user's id to check; if `undefined` the function returns `false`.
+ * @returns `true` if the user's role is `'admin'`, `false` otherwise.
+ */
 export async function isAdmin(userId: string | undefined): Promise<boolean | boolean> {
 
   if (!userId) {

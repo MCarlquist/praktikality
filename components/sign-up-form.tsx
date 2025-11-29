@@ -18,6 +18,17 @@ import { useState } from "react";
 import {v4 as uuidv4} from 'uuid';
 
 
+/**
+ * Render a sign-up form card that registers a new user with Supabase and navigates to a success page.
+ *
+ * The form validates that the password and repeat password match, creates an auth user, inserts a profile
+ * row into the `profiles` table (id from the created user, role `"user"`, and email), displays errors,
+ * and shows a loading state while the request is in progress.
+ *
+ * @param className - Additional CSS class names appended to the root container.
+ * @param props - All other props are passed through to the root `div`.
+ * @returns The sign-up form React element.
+ */
 export function SignUpForm({
   className,
   ...props

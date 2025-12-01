@@ -1,6 +1,7 @@
-import { ArrowUpRightIcon, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 type EmptyAreaProps = {
     title: React.ReactNode;
     description?: React.ReactNode;
@@ -15,14 +16,18 @@ export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {
                     <EmptyMedia variant="icon">
                         <Building2 />
                     </EmptyMedia>
-                    <EmptyTitle>{ title }</EmptyTitle>
+                    <EmptyTitle>{title}</EmptyTitle>
                     <EmptyDescription>
-                        { description }
+                        {description}
                     </EmptyDescription>
                 </EmptyHeader>
                 <EmptyContent>
                     <div className="flex gap-2">
-                        <Button variant={'outline'}>{ cta }</Button>
+                        <Link href={"/admin/company/new/"}>
+                        <Button variant={'outline'}>{cta} </Button>
+
+                        </Link>
+
                     </div>
                 </EmptyContent>
             </Empty>

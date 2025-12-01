@@ -1,9 +1,17 @@
+"use client";
+
 import { DataTable } from "@/components/admin/data-table";
 import EmptyArea from "@/components/admin/empty-area";
-
+import { Suspense } from "react";
 
 
 export default function CompanyAdminPage() {
+    const fetchCompanies = async () => {
+        const response = await fetch('/api/admin/company');
+        const data = await response.json();
+        return data.companies;
+    };
+    const companies = fetchCompanies().then(data => data || []);
     return (
         <>
             {/* If there are no companies */}
@@ -12,7 +20,13 @@ export default function CompanyAdminPage() {
                 cta="Create Company"
             />
             {/* If there are companies, show the data table */}
-            <DataTable /> 
+            
+                
+            <Suspense fallback={<div>Loading...</div>}>
+                <DataTable
+                    
+                />
+            </Suspense> 
         </>
     );
 }

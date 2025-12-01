@@ -1,20 +1,30 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
-import { hasEnvVars } from "../utils";
+import { type NextRequest, NextResponse } from "next/server";
+import { isAdmin } from "./admin";
+import { createClient } from "./client";
 
+const hasEnvVars =
+  process.env.NEXT_PUBLIC_SUPABASE_URL &&
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+/**
+ * Ensures the Supabase session is synchronized with the incoming Next.js request and enforces route access based on authentication and admin status.
+ *
+ * @param request - The incoming Next.js request used to read cookies, URL path, and evaluate the current Supabase session
+ * @returns A NextResponse that has Supabase cookies synchronized with the request and may be a redirect:
+ * - Redirects to "/auth/login" when the request path is not "/" and there is no authenticated session, excluding paths starting with "/login" or "/auth".
+ * - Redirects to "/" when the request path starts with "/admin" and the current user is not an admin.
+ * - Otherwise returns a response preserving the request with any cookies set by the Supabase client.
+ */
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  // If the env vars are not set, skip proxy check. You can remove this
-  // once you setup the project.
   if (!hasEnvVars) {
     return supabaseResponse;
   }
 
-  // With Fluid compute, don't put this client in a global environment
-  // variable. Always create a new one on each request.
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
@@ -38,39 +48,34 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  // Do not run code between createServerClient and
-  // supabase.auth.getClaims(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: If you remove getClaims() and you use server-side rendering
-  // with the Supabase client, your users may be randomly logged out.
   const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  const person = data?.claims;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const okAdmin = await isAdmin(user?.id);
+  console.log('isAdmin check in updateSession:', okAdmin);
 
   if (
     request.nextUrl.pathname !== "/" &&
-    !user &&
+    !person &&
     !request.nextUrl.pathname.startsWith("/login") &&
     !request.nextUrl.pathname.startsWith("/auth")
   ) {
-    // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
+  // Check admin routes
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    if (!okAdmin) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
 
   return supabaseResponse;
 }
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};

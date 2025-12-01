@@ -1,18 +1,23 @@
-import { DeployButton } from "@/components/deploy-button";
 import { EnvVarWarning } from "@/components/env-var-warning";
 import { AuthButton } from "@/components/auth-button";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
 import { TopNav } from "@/components/admin/top-nav";
 
+/**
+ * Renders the admin page layout with top navigation, main content area, and footer; displays an environment-variable warning when required vars are missing or authentication controls otherwise.
+ *
+ * @param children - Content rendered inside the layout's main area.
+ * @returns The complete admin layout element.
+ */
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <main className="min-h-screen flex flex-col items-center">
       <div className="flex-1 w-full flex flex-col gap-20 items-center">

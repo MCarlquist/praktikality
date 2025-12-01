@@ -1,12 +1,19 @@
 import { redirect } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/server";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { InfoIcon } from "lucide-react";
 import { FetchDataSteps } from "@/components/tutorial/fetch-data-steps";
 import { Suspense } from "react";
 
+/**
+ * Fetches the current user's authentication claims from Supabase.
+ *
+ * If fetching fails or no claims are present, triggers a redirect to "/auth/login".
+ *
+ * @returns A pretty-printed JSON string of the user's claims (2-space indentation)
+ */
 async function UserDetails() {
-  const supabase = await createClient();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase.auth.getClaims();
 
   if (error || !data?.claims) {

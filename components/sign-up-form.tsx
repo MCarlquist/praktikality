@@ -15,7 +15,20 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import {v4 as uuidv4} from 'uuid';
 
+
+/**
+ * Render a sign-up form card that registers a new user with Supabase and navigates to a success page.
+ *
+ * The form validates that the password and repeat password match, creates an auth user, inserts a profile
+ * row into the `profiles` table (id from the created user, role `"user"`, and email), displays errors,
+ * and shows a loading state while the request is in progress.
+ *
+ * @param className - Additional CSS class names appended to the root container.
+ * @param props - All other props are passed through to the root `div`.
+ * @returns The sign-up form React element.
+ */
 export function SignUpForm({
   className,
   ...props
@@ -40,17 +53,34 @@ export function SignUpForm({
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/protected`,
         },
       });
+
       if (error) throw error;
+      console.log('Sign-up data:', data);
+      
+
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .insert([
+          { id: data.user?.id, role: 'user', email },
+        ])
+        .select();
+
+      if (profileError) {
+        setError(profileError.message);
+      }
+
+
+
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(error instanceof Error ? error.message : "Sorry , something went wrong");
     } finally {
       setIsLoading(false);
     }

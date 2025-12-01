@@ -210,12 +210,12 @@ return (
             <Controller name="remote" control={control} rules={{ required: true }} render={({ field }) => (
                 <RadioGroup value={field.value} onValueChange={field.onChange}>
                     <div className="flex items-center gap-3">
-                        <RadioGroupItem value="yes" id="i1" />
-                        <Label htmlFor="i1">Yes</Label>
+                        <RadioGroupItem value="yes" id="remote-yes" />
+                        <Label htmlFor="remote-yes">Yes</Label>
                     </div>
                     <div className="flex items-center gap-3">
-                        <RadioGroupItem value="no" id="i2" />
-                        <Label htmlFor="i2">No</Label>
+                        <RadioGroupItem value="no" id="remote-no" />
+                        <Label htmlFor="remote-no">No</Label>
                     </div>
                 </RadioGroup>)}
             />

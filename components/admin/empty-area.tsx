@@ -32,4 +32,3 @@ export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {
         </div>
     );
 }
-}

@@ -1,12 +1,12 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import { createClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export async function GET() {
 
     try {
-        const supabase = await createClient();
+        const supabase = await createServerSupabaseClient();
         let { data: companies, error } = await supabase.from('companies').select('*');
         
         return NextResponse.json({ companies });
@@ -20,7 +20,7 @@ export async function GET() {
 export async function POST(request: Request) {
     
     try {
-        const supabase = await createClient();
+        const supabase = await createServerSupabaseClient();
         const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location } = await request.json();
 
         const { data, error } = await supabase

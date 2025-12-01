@@ -6,6 +6,10 @@ type EmptyAreaProps = {
     title: React.ReactNode;
     description?: React.ReactNode;
     cta?: React.ReactNode;
+type EmptyAreaProps = {
+    title: React.ReactNode;
+    description?: React.ReactNode;
+    cta?: React.ReactNode;
 };
 
 export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {
@@ -17,20 +21,19 @@ export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {
                         <Building2 />
                     </EmptyMedia>
                     <EmptyTitle>{title}</EmptyTitle>
-                    <EmptyDescription>
-                        {description}
-                    </EmptyDescription>
+                    {description && (
+                      <EmptyDescription>{description}</EmptyDescription>
+                    )}
                 </EmptyHeader>
-                <EmptyContent>
+                {cta && (
+                  <EmptyContent>
                     <div className="flex gap-2">
-                        <Link href={"/admin/company/new/"}>
-                        <Button variant={'outline'}>{cta} </Button>
-
-                        </Link>
-
+                      <Button variant="outline">{cta}</Button>
                     </div>
-                </EmptyContent>
+                  </EmptyContent>
+                )}
             </Empty>
         </div>
     );
+}
 }

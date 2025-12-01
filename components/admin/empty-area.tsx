@@ -6,10 +6,6 @@ type EmptyAreaProps = {
     title: React.ReactNode;
     description?: React.ReactNode;
     cta?: React.ReactNode;
-type EmptyAreaProps = {
-    title: React.ReactNode;
-    description?: React.ReactNode;
-    cta?: React.ReactNode;
 };
 
 export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {

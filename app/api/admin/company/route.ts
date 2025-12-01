@@ -22,7 +22,6 @@ export async function POST(request: Request) {
     try {
         const supabase = await createClient();
         const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location } = await request.json();
-        console.log('Received data:', { company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location });
 
         const { data, error } = await supabase
             .from('companies')
@@ -31,11 +30,8 @@ export async function POST(request: Request) {
             .single();
 
         if (error) {
-            console.log('Insert error:', error);
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
-
-        console.log('Inserted data:', data);
         
 
         return NextResponse.json({ data }, { status: 201 });

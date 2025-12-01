@@ -4,7 +4,7 @@ import { hasEnvVars } from "@/lib/utils";
 import Link from "next/link";
 import { Suspense } from "react";
 import { Footer } from "@/components/footer";
-import { createClient } from "@/lib/supabase/client";
+import { TopNav } from "@/components/admin/top-nav";
 
 /**
  * Renders the admin page layout with top navigation, main content area, and footer; displays an environment-variable warning when required vars are missing or authentication controls otherwise.
@@ -34,6 +34,7 @@ export default function AdminLayout({
               </Suspense>
             )}
           </div>
+          <TopNav />
         </nav>
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           {children}

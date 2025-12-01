@@ -52,8 +52,7 @@ export async function updateSession(request: NextRequest) {
   const person = data?.claims;
 
   const { data: { user } } = await supabase.auth.getUser();
-  const okAdmin = await isAdmin(user!.id);
-  console.log('isAdmin check in updateSession:', okAdmin);
+  const okAdmin = await isAdmin(user?.id ?? "");
 
   if (
     request.nextUrl.pathname !== "/" &&

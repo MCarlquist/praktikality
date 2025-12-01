@@ -23,6 +23,7 @@ export default async function handler(req: NextRequest) {
       return NextResponse.json({ admin: false, error: "Not authenticated" }, { status: 401 });
     }
     const { data: { user } } = await supabase.auth.getUser();
+    console.log('User:', user);
     const admin = await isAdmin(user!.id);
     return NextResponse.json({ admin });
   } catch (error) {

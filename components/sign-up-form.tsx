@@ -15,7 +15,6 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {v4 as uuidv4} from 'uuid';
 
 
 /**
@@ -62,7 +61,6 @@ export function SignUpForm({
       });
 
       if (error) throw error;
-      console.log('Sign-up data:', data);
       
 
       const { data: profileData, error: profileError } = await supabase

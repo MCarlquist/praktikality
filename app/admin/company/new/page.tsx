@@ -26,6 +26,7 @@ type InputFormValues = {
     programming_languages: string[];
     remote: string
     location: string;
+    company_site: string;
 };
 
 
@@ -69,6 +70,7 @@ export default function NewCompanyPage() {
             programming_languages: [],
             remote: "",
             location: "",
+            company_site: "",
         },
     });
 
@@ -96,7 +98,9 @@ export default function NewCompanyPage() {
                     theme: 'dark',
 
                 });
-                router.push('/admin/company');
+                setTimeout(() => {
+                    router.push('/admin/company');
+                }, 3500);
             } else {
                 const errorData = await response.json();
                 toast.error("Failed to create company: " + errorData.error, {
@@ -106,8 +110,7 @@ export default function NewCompanyPage() {
                 });
                 
             }
-            
-            // router.push('/admin/company');
+
         } catch (error) {
     } finally {
         setLoading(false);
@@ -129,6 +132,15 @@ return (
             />
 
             {errors.company_name && <span className="text-red-500 text-sm">This field is required</span>}
+
+            <Controller
+                name="company_site"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => <Input {...field} placeholder="Company Site" className="w-full px-3 py-2 border rounded" />}
+            />
+
+            {errors.company_site && <span className="text-red-500 text-sm">This field is required</span>}
 
             <Controller
                 name="company_contact"
@@ -194,6 +206,7 @@ return (
             {errors.have_intern && <span className="text-red-500 text-sm">This field is required</span>}
 
             {/* multiple select of programming languages */}
+            <p>Programming Languages used by company</p>
             <Controller
                 name="programming_languages"
                 control={control}

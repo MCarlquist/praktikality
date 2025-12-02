@@ -11,7 +11,15 @@ export default function CompanyAdminPage() {
         const data = await response.json();
         return data.companies;
     };
-    const companies = fetchCompanies().then(data => data || []);
+    
+    fetchCompanies()
+    .then(data => {
+        console.log('Fetched companies:', data);
+    })
+    .catch(error => {
+        console.error('Error fetching companies:', error);
+    });
+    
     return (
         <>
             {/* If there are no companies */}

@@ -24,7 +24,9 @@ export default function EmptyArea({ title, description, cta }: EmptyAreaProps) {
                 {cta && (
                   <EmptyContent>
                     <div className="flex gap-2">
-                      <Button variant="outline">{cta}</Button>
+                      <Link href={'/admin/company/new'}>
+                        <Button variant="outline">{cta}</Button>
+                      </Link>
                     </div>
                   </EmptyContent>
                 )}

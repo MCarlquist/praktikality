@@ -1,6 +1,5 @@
-
 import { Suspense } from "react";
-import CompanyDetailView from "./company-view";
+import CompanyDetailContent from "./company-detail-content";
 
 export default async function CompanyDetailPage(props: { params: Promise<{ company_name: string }> }) {
     const params = await props.params;
@@ -9,9 +8,7 @@ export default async function CompanyDetailPage(props: { params: Promise<{ compa
 
     return (
         <Suspense fallback={<div>Loading company details...</div>}>
-            <div>
-                <CompanyDetailView companyName={companyName} />
-            </div>
+            <CompanyDetailContent companyName={companyName} />
         </Suspense>
     );
 }

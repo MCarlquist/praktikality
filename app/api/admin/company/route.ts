@@ -4,11 +4,7 @@ import { NextResponse } from "next/server";
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import type { NextRequest } from 'next/server'
 
-export async function GET(_request: NextRequest, ctx: RouteContext<'/api/admin/company'>) {
-
-   console.log(ctx);
-   
-
+export async function GET(_request: NextRequest) {
     try {
         const supabase = await createServerSupabaseClient();
         let { data: companies, error } = await supabase.from('companies').select('*');
@@ -25,11 +21,11 @@ export async function POST(request: Request) {
     
     try {
         const supabase = await createServerSupabaseClient();
-        const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location } = await request.json();
+        const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location, company_site } = await request.json();
 
         const { data, error } = await supabase
             .from('companies')
-            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location }])
+            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location, company_site }])
             .select()
             .single();
 

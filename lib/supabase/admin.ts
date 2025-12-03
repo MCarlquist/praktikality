@@ -9,7 +9,6 @@ const supabase = createClient();
 
 // function that checks if the user is an admin
 export async function isAdmin(userId: string): Promise<boolean> {
-  console.log('isAdmin called with userId:', userId);
   // query the profile row and check the role
   const { data, error } = await supabase
     .from("profiles")
@@ -17,12 +16,9 @@ export async function isAdmin(userId: string): Promise<boolean> {
     .eq("id", userId)
     .single();
       if (error) {
-          console.log("Error checking admin status:", error);
+          console.error("Error checking admin role:", error);
           return false;
       }
 
-      
-      
-  
        return (data?.role ?? null) === "admin";
 }

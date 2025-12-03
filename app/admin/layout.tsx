@@ -34,9 +34,10 @@ export default function AdminLayout({
               </Suspense>
             )}
           </div>
-          <TopNav />
+          
         </nav>
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
+          <TopNav />
           {children}
         </div>
 

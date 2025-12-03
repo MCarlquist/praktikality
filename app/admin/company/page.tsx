@@ -1,11 +1,13 @@
 "use client";
 
-import { DataTable } from "@/components/admin/data-table";
+import {DataTable} from "@/components/admin/data-table";
 import EmptyArea from "@/components/admin/empty-area";
 import { Suspense, useState, useEffect } from "react";
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { columns } from "@/components/admin/data-table/columns";
 
 
 export default function CompanyAdminPage() {
@@ -42,10 +44,16 @@ export default function CompanyAdminPage() {
                 <div> <Spinner className="size-7 mx-auto" /></div>
             ) : companies.length > 0 ? (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <DataTable  />
-                    <Link href="/admin/company/new">
-                        <Button size={'lg'} variant="outline" className="mx-auto flex">Add Company</Button>
-                    </Link>
+                    <DataTable data={companies} columns={columns} />
+                    
+                        <ButtonGroup className="mx-auto">
+                            <Link href="/admin/company/new">
+                            <Button size={'lg'} variant="outline" className="mx-auto flex">Add Company</Button>
+                            </Link>
+                            <Button size={'lg'} variant="link" className="mx-auto flex">Import from Excel</Button>
+                        </ButtonGroup>
+                    
+                    
                 </Suspense>
             ) : (
                 <EmptyArea

@@ -1,14 +1,17 @@
 
+import { Suspense } from "react";
+import CompanyDetailView from "./company-view";
 
 export default async function CompanyDetailPage(props: { params: Promise<{ company_name: string }> }) {
     const params = await props.params;
     const { company_name } = params;
-    console.log('company', company_name);
+    const companyName = decodeURIComponent(company_name);
 
     return (
-        <div>
-            Company Detail Page for
-            {company_name}
-        </div>
+        <Suspense fallback={<div>Loading company details...</div>}>
+            <div>
+                <CompanyDetailView companyName={companyName} />
+            </div>
+        </Suspense>
     );
 }

@@ -11,7 +11,7 @@ export async function TopNav() {
                 <Link href="/admin">Admin Dashboard</Link>
             </Button>
             <Button asChild size={'lg'} variant={"outline"}>
-                <Link href="/admin/company">Company Page</Link>
+                <Link href="/admin/company">Companies</Link>
             </Button>
             
             <Button asChild size={'lg'} variant={"outline"}>

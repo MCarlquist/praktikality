@@ -19,7 +19,8 @@ import Router, { RedirectType } from "next/navigation";
 export type CompanyTableData = {
   id: string
   company_name: string
-  company_contact: string
+  company_contact: string,
+  number_of_deltagare: string
 }
 
 
@@ -32,6 +33,10 @@ export const columns: ColumnDef<CompanyTableData>[] = [
   {
     accessorKey: "company_contact",
     header: "Contact",
+  },
+  {
+    accessorKey: 'number_of_deltagare',
+    header: '# of deltagare'
   },
   {
     id: "actions",

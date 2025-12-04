@@ -1,6 +1,6 @@
 "use client";
 
-import {DataTable} from "@/components/admin/data-table";
+import {DataTable} from "@/components/admin/data-table/data-table";
 import EmptyArea from "@/components/admin/empty-area";
 import { Suspense, useState, useEffect } from "react";
 import { Spinner } from "@/components/ui/spinner"

@@ -37,7 +37,6 @@ export const columns: ColumnDef<CompanyTableData>[] = [
     id: "actions",
     cell: ({ row }) => {
       const payment = row.original
-      console.log('row original', row.original.company_name);
       const { id, company_name } = row.original;
       
       return (

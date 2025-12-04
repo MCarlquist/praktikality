@@ -1,16 +1,20 @@
 "use server";
 
+
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-    try {
-        const companyName = request.nextUrl.searchParams.get('company_name');
+    
+    try { 
         
-        if (!companyName) {
+        const fromServer = request.nextUrl.searchParams.get('company_name');
+        
+        if (!fromServer) {
             return NextResponse.json({ error: 'company_name parameter is required' }, { status: 400 });
         }
 
+        const companyName = decodeURI(fromServer);
         const supabase = await createServerSupabaseClient();
         let { data: company, error } = await supabase
             .from('companies')

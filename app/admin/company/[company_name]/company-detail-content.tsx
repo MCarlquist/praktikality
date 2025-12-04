@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 
 export default function CompanyDetailContent({ companyName }: { companyName: string }) {
@@ -50,9 +50,10 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
 
     return (
         <div>
-            <p className="text-lg">Company: {companyName}</p>
+            <Suspense fallback={<p>Loading Company Detail</p>}>
+                <p className="text-lg">Company: {companyName}</p>
             <pre>{JSON.stringify(data, null, 2)}</pre>
-            <p>Commpany Type: {data} </p>
+            <p>Commpany Type: {data} </p></Suspense>
         </div>
     );
 }

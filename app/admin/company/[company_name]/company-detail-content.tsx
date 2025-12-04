@@ -26,11 +26,24 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     }, [companyName]);
 
     useEffect(() => {
-        Object.keys(data).forEach(key => {
-            console.log(data[key]);
-            const type = data[key].company_type;
-        });
+        mapDetails(data);
     }, [data]);
+
+    function mapDetails(data: object) {
+        const result = Object.entries(data).map(([key, item]) => {
+            console.log(item);
+
+            const type = item.company_type;
+
+
+            return {
+                key,
+                type,
+                item
+            };
+        });
+
+    }
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;

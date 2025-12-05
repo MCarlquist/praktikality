@@ -15,10 +15,6 @@ export async function isAdmin(userId: string): Promise<boolean> {
     .select("role")
     .eq("id", userId)
     .single();
-      if (error) {
-          console.error("Error checking admin role:", error);
-          return false;
-      }
 
        return (data?.role ?? null) === "admin";
 }

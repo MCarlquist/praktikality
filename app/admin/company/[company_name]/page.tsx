@@ -6,6 +6,7 @@ import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 
 
+
 type User = {
     id: string,
     email: string
@@ -73,7 +74,7 @@ export default function CompanyDetailPage(props: { params: Promise<{ company_nam
                 <p>Programming Languages:</p>
                 <p className="text-md">{program_languages.map((lang, index) => (
                     <ul>
-                        <li className="text-sm">{lang}</li>
+                        <li key={index} className="text-sm">-{lang}</li>
                     </ul>
                 ))}</p>
                 <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>

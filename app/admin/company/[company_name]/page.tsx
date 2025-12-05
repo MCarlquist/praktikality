@@ -13,7 +13,7 @@ type User = {
 }
 
 export default function CompanyDetailPage(props: { params: Promise<{ company_name: string }> }) {
-    const { company_name } = useParams();
+    const { company_name } = useParams<{ company_name: string }>();
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -72,11 +72,11 @@ export default function CompanyDetailPage(props: { params: Promise<{ company_nam
                 <p>Company Size: {size} people</p>
                 <p>Do they already have an intern? Yes <Checkbox checked={haveIntern === 'yes' ? true : false} /> No <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
                 <p>Programming Languages:</p>
-                <p className="text-md">{program_languages.map((lang, index) => (
-                    <ul>
-                        <li key={index} className="text-sm">-{lang}</li>
-                    </ul>
-                ))}</p>
+                <ul className="text-md">{program_languages.map((lang, index) => (
+                    <li key={index}>
+                        <p className="text-sm">-{lang}</p>
+                    </li>
+                ))}</ul>
                 <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
                 <p>Location: {location}</p>
                 <p>Contact: <a className="text-blue-400" href={`mailto:${contact}`}>{contact}</a></p>

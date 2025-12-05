@@ -9,7 +9,7 @@ type User = {
 
 export default async function CompanyDetailPage(props: { params: Promise<{ company_name: string }> }) {
     "use cache"
-    cacheLife('minutes');
+    cacheLife('seconds');
     const params = await props.params;
     const company_name = decodeURIComponent(params.company_name);
 

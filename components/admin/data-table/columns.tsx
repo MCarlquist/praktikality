@@ -19,7 +19,8 @@ import Router, { RedirectType } from "next/navigation";
 export type CompanyTableData = {
   id: string
   company_name: string
-  company_contact: string
+  company_contact: string,
+  number_of_deltagare: string
 }
 
 
@@ -34,10 +35,13 @@ export const columns: ColumnDef<CompanyTableData>[] = [
     header: "Contact",
   },
   {
+    accessorKey: 'number_of_deltagare',
+    header: '# of deltagare'
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const payment = row.original
-      console.log('row original', row.original.company_name);
       const { id, company_name } = row.original;
       
       return (

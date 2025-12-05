@@ -23,12 +23,11 @@ async function ErrorContent({
   );
 }
 
-export default async function Page(
+export default function Page(
   props: {
     searchParams: Promise<{ error: string }>;
   }
 ) {
-  const searchParams = await props.searchParams;
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -41,7 +40,7 @@ export default async function Page(
             </CardHeader>
             <CardContent>
               <Suspense>
-                <ErrorContent searchParams={searchParams} />
+                <ErrorContent searchParams={props.searchParams} />
               </Suspense>
             </CardContent>
           </Card>

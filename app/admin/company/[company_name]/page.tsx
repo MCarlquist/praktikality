@@ -64,9 +64,18 @@ export default function CompanyDetailPage(props: { params: Promise<{ company_nam
     if (loading) return <div className="flex flex-col"> <Spinner className="size-8" /> Loading Company...</div>;
     if (error) return <div>Error: {error}</div>;
 
+    function detailSkeleton() {
+        return (
+            <div className="flex flex-col">
+                <Spinner className="size-8" />
+                Loading Company...
+            </div>
+        );
+    }
+
     return (
         <div className="mx-auto">
-            <Suspense fallback={<p>Loading Company Detail</p>}>
+            <Suspense fallback={detailSkeleton()}>
                 <p className="text-5xl mb-3">{name}</p>
                 <p>Company Type: {type}</p>
                 <p>Company Size: {size} people</p>

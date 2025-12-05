@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'company_name parameter is required' }, { status: 400 });
         }
 
-        const companyName = decodeURI(fromServer);
+        const companyName = fromServer;
         const supabase = await createServerSupabaseClient();
         let { data: company, error } = await supabase
             .from('companies')

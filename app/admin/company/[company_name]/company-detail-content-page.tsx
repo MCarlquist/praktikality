@@ -10,37 +10,37 @@ type User = {
 }
 
 export default function CompanyDetailContent({ companyName }: { companyName: string }) {
-    const [data, setData] = useState({});
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [name, setNamme] = useState('');
+    const [name, setName] = useState('');
     const [type, setType] = useState('');
     const [size, setSize] = useState('');
-    const [haveIntern, sethaveIntern] = useState('');
-    const [program_languages, setProgramming_Languages] = useState([]);
+    const [haveIntern, setHaveIntern] = useState('');
+    const [programmingLanguages, setProgrammingLanguages] = useState([]);
     const [remote, setRemote] = useState('');
     const [location, setLocation] = useState('');
     const [contact, setContact] = useState('');
     const [website, setWebsite] = useState('');
-    const [dUsers, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
                 const result = await response.json();
-                setNamme(result.company.company_name);
+                setName(result.company.company_name);
                 setType(result.company.company_type);
                 setSize(result.company.company_size);
-                sethaveIntern(result.company.have_intern);
-                setProgramming_Languages(result.company.programming_languages);
+                setHaveIntern(result.company.have_intern);
+                setProgrammingLanguages(result.company.programming_languages);
                 setRemote(result.company.remote);
                 setLocation(result.company.location);
                 setContact(result.company.company_contact);
                 setWebsite(result.company.company_site);
 
                 // Creating sample Array of users at company
-                const userTestDataArray: User[] = [{id: 'efcid83', email: 'user1@codex.com'}, {id: 'fdak382', email: 'user2@codex.comm'}];
+                const userTestDataArray: User[] = [{id: 'efcid83', email: 'user1@codex.com'}, {id: 'fdak382', email: 'user2@codex.com'}];
                 setUsers(userTestDataArray);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
@@ -64,7 +64,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <p>Company Size: {size} people</p>
             <p>Do they already have an intern? Yes <Checkbox checked={haveIntern === 'yes' ? true : false} /> No <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
             <p>Programming Languages:</p>
-            <ul className="text-md">{program_languages.map((lang, index) => (
+            <ul className="text-md">{programmingLanguages.map((lang, index) => (
                 <li key={index}>
                     <p className="text-sm">-{lang}</p>
                 </li>
@@ -77,7 +77,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <div className="mt-4">
                 <p>Current Deltagare:</p>
                 <small>{
-                    dUsers.map(((user) =>
+                    users.map(((user) =>
                         <p key={user.id}>{user.email}</p> 
                     ))}</small>
             </div>

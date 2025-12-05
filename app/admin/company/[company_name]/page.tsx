@@ -5,6 +5,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 
+
+type User = {
+    id: string,
+    email: string
+}
+
 export default function CompanyDetailPage(props: { params: Promise<{ company_name: string }> }) {
     const { company_name } = useParams();
     const [data, setData] = useState({});
@@ -19,13 +25,14 @@ export default function CompanyDetailPage(props: { params: Promise<{ company_nam
     const [location, setLocation] = useState('');
     const [contact, setContact] = useState('');
     const [website, setWebsite] = useState('');
+    const [dUsers, setUsers] = useState<User[]>([]);
+
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(company_name))}`);
                 const result = await response.json();
-                console.log('res', result.company);
                 setNamme(result.company.company_name);
                 setType(result.company.company_type);
                 setSize(result.company.company_size);
@@ -35,6 +42,12 @@ export default function CompanyDetailPage(props: { params: Promise<{ company_nam
                 setLocation(result.company.location);
                 setContact(result.company.company_contact);
                 setWebsite(result.company.company_site);
+
+
+                // Creating sample Array of uers at company
+                const userTestDataArray: User[] = [{id: 'efcid83', email: 'user1@codex.com'}, {id: 'fdak382', email: 'user2@codex.comm'}];
+                setUsers(userTestDataArray);
+                
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
             } finally {
@@ -66,7 +79,10 @@ export default function CompanyDetailPage(props: { params: Promise<{ company_nam
 
                 <div className="mt-4">
                     <p>Current Deltagare:</p>
-                    <small>Here deltagare that are assigned to this company should show up.</small>
+                    <small>{
+                        dUsers.map(((user, index) =>
+                            <p key={user.id}>{user.email}</p> 
+                        ))}</small>
                 </div>
             </Suspense>
         </div>

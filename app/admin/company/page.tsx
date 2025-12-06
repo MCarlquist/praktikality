@@ -40,6 +40,16 @@ export default function CompanyAdminPage() {
 
     return (
         <>
+            <h1 className="text-2xl font-bold text-center">Companies</h1>
+            <div className="flex flex-col items-center justify-center">
+                <p>Here you can manage companies of Praktikality.</p>
+                <ul className="text-sm">
+                    <li>- Add Company</li>
+                    <li>- Delete Company</li>
+                    <li>- Edit Company</li>
+                </ul>
+
+            </div>
             {  isLoading ? (
                 <div> <Spinner className="size-7 mx-auto" /></div>
             ) : companies.length > 0 ? (

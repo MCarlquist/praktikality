@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Suspense } from "react"
 
 
 interface DataTableProps<TData, TValue> {

@@ -60,7 +60,6 @@ export const columns: ColumnDef<CompanyTableData>[] = [
               View Company Details
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )

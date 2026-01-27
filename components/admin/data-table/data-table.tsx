@@ -60,8 +60,10 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
               >
-                {row.getVisibleCells().map((cell) => (
+                {row.getVisibleCells().map((cell: any) => (
+                  cell.row.original.deltagare?.length || 0,
                   <TableCell key={cell.id}>
+                    {}
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}

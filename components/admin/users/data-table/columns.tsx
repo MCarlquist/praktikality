@@ -17,6 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
+import { toast } from "react-toastify";
+import { Toaster } from "@/components/ui/sonner";
 
 
 export type UserTableData = {
@@ -47,9 +49,31 @@ function ActionsCell({ row }: { row: any }) {
 
 
 
-    const handleEditUser = (e: any) => {
+    const handleEditUser = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
         // Here you can handle the form submission, e.g., send updated data to the server
+        const updatedUser = {
+            id: row.original.id,
+            want_internship: wantInternship,
+        };
+        const submit = fetch('/api/admin/users', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedUser),
+        });
+        
+         const result = (await submit).json();
+        const response = await result;
+
+        // toast notification
+        if (response.success) {
+          toast.success(`successfully updated ${email}`);
+        } else {
+          toast.error('Något gick fel, försök igen.');
+        }
+
         setOpen(false);
     }
 
@@ -73,6 +97,7 @@ function ActionsCell({ row }: { row: any }) {
     return (
         <>
             <DropdownMenu>
+                <Toaster position="top-right" />
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Open menu</span>
@@ -97,7 +122,7 @@ function ActionsCell({ row }: { row: any }) {
                             Make changes to {email}
                         </DialogDescription>
                     </DialogHeader>
-                    <form onSubmit={(e) => e.preventDefault()}>
+                    <form onSubmit={handleEditUser}>
                         <FieldGroup>
                             <Field>
                                 <FieldLabel>Are they ready for internship?</FieldLabel>

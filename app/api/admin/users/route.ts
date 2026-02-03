@@ -17,6 +17,33 @@ export async function GET() {
     }
 }
 
+export async function PUT(req: NextRequest) {
+    const body = await req.json();
+    console.log('updating user', body);
+
+    try {
+        const supabase = await createServerSupabaseClient();
+
+        const { data, error } = await supabase
+            .from('profiles')
+            .update({
+                want_internship: body.want_internship,
+            })
+            .eq('id', body.id)
+            .select();
+
+        if (error) {
+            throw new Error(error.message);
+        }
+        console.log('data', data);
+        
+        return NextResponse.json({ message: 'User updated successfully', success: true });
+    } catch (error) {
+        console.log('error', error);
+        return NextResponse.json({ error: 'Failed to update user', success: false }, { status: 500 });
+    }
+}
+
 
 export async function DELETE(req: NextRequest) {
     console.log('deleting user');

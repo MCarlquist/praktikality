@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -25,15 +25,10 @@ export type UserTableData = {
     email: string,
 }
 
-function ActionsCell({ row }: { row: any }) {
+function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
     const [open, setOpen] = useState(false);
-    const [users, setUsers] = useState<any[]>([]);
-    const [wantInternship, setWantInternship] = useState<boolean>(false);
-    const { want_internship, email, companies_they_work_at } = row.original;
-
-    useEffect(() => {
-        setWantInternship(want_internship);
-    }, [want_internship]);
+    const [wantInternship, setWantInternship] = useState<boolean>(row.original.want_internship ?? false);
+    const { email, companies_they_work_at } = row.original;
 
     console.log(row.original)
 
@@ -51,25 +46,27 @@ function ActionsCell({ row }: { row: any }) {
 
     const handleEditUser = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-        // Here you can handle the form submission, e.g., send updated data to the server
         const updatedUser = {
             id: row.original.id,
             want_internship: wantInternship,
         };
-        const submit = fetch('/api/admin/users', {
+        
+        const response = await (await fetch('/api/admin/users', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(updatedUser),
-        });
-        
-         const result = (await submit).json();
-        const response = await result;
+            body: JSON.stringify({
+                id: row.original.id,
+                updatedUser: updatedUser,
+            }),
+        })).json();
 
         // toast notification
         if (response.success) {
           toast.success(`successfully updated ${email}`);
+          row.original.want_internship = wantInternship;
+          onUpdate?.();
         } else {
           toast.error('Något gick fel, försök igen.');
         }
@@ -88,10 +85,8 @@ function ActionsCell({ row }: { row: any }) {
         });
         const data = await response.json();
         if (data.success) {
-            setUsers(users.filter(user => user.id !== row.original.id));
+            onUpdate?.();
         }
-
-        setUsers(users.filter(user => user.id !== row.original.id));
     }
 
     return (

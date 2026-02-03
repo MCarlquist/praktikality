@@ -19,7 +19,8 @@ export async function GET() {
 
 export async function PUT(req: NextRequest) {
     const body = await req.json();
-    console.log('updating user', body);
+    console.log('updated body', body.updatedUser);
+    
 
     try {
         const supabase = await createServerSupabaseClient();
@@ -27,9 +28,9 @@ export async function PUT(req: NextRequest) {
         const { data, error } = await supabase
             .from('profiles')
             .update({
-                want_internship: body.want_internship,
+                want_internship: body.updatedUser.want_internship,
             })
-            .eq('id', body.id)
+            .eq('id', body.updatedUser.id)
             .select();
 
         if (error) {

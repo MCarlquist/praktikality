@@ -15,27 +15,27 @@ export default function CompanyAdminPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await fetch('/api/admin/users');
-                if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(`Failed to fetch users: ${response.status} ${text}`);
-                }
-                const data = await response.json();
-                setUsers(data.users ?? []);
-                if (process.env.NODE_ENV !== 'production') {
-                    console.log('fetched users', data.users);
-                }
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchUsers();
     }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('/api/admin/users');
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Failed to fetch users: ${response.status} ${text}`);
+            }
+            const data = await response.json();
+            setUsers(data.users ?? []);
+            if (process.env.NODE_ENV !== 'production') {
+                console.log('fetched users', data.users);
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 
     return (
@@ -61,7 +61,7 @@ export default function CompanyAdminPage() {
                 <div> <Spinner className="size-7 mx-auto" /></div>
             ) : users.length > 0 ? (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <DataTable data={users} columns={userColumns} />
+                    <DataTable data={users} columns={userColumns} onUpdate={fetchUsers} />
 
 
 

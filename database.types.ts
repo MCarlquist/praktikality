@@ -14,21 +14,75 @@ export type Database = {
   }
   public: {
     Tables: {
+      companies: {
+        Row: {
+          antal_intresserade: string[] | null
+          company_contact: string | null
+          company_name: string
+          company_site: string | null
+          company_size: string | null
+          company_type: string | null
+          created_at: string
+          deltagare: string[] | null
+          have_intern: string | null
+          id: number
+          location: string | null
+          programming_languages: string[] | null
+          remote: string | null
+        }
+        Insert: {
+          antal_intresserade?: string[] | null
+          company_contact?: string | null
+          company_name?: string
+          company_site?: string | null
+          company_size?: string | null
+          company_type?: string | null
+          created_at?: string
+          deltagare?: string[] | null
+          have_intern?: string | null
+          id?: number
+          location?: string | null
+          programming_languages?: string[] | null
+          remote?: string | null
+        }
+        Update: {
+          antal_intresserade?: string[] | null
+          company_contact?: string | null
+          company_name?: string
+          company_site?: string | null
+          company_size?: string | null
+          company_type?: string | null
+          created_at?: string
+          deltagare?: string[] | null
+          have_intern?: string | null
+          id?: number
+          location?: string | null
+          programming_languages?: string[] | null
+          remote?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          companies_they_work_at: string[] | null
           email: string
           id: string
           role: string
+          want_internship: boolean | null
         }
         Insert: {
+          companies_they_work_at?: string[] | null
           email: string
           id?: string
           role: string
+          want_internship?: boolean | null
         }
         Update: {
+          companies_they_work_at?: string[] | null
           email?: string
           id?: string
           role?: string
+          want_internship?: boolean | null
         }
         Relationships: []
       }

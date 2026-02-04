@@ -15,21 +15,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Suspense } from "react"
 
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onUpdate?: () => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onUpdate,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
-    columns,
+    columns: columns,
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -60,11 +61,9 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
               >
-                {row.getVisibleCells().map((cell: any) => (
-                  cell.row.original.deltagare?.length || 0,
+                {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {}
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {flexRender(cell.column.columnDef.cell, { ...cell.getContext(), onUpdate })}
                   </TableCell>
                 ))}
               </TableRow>

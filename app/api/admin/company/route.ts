@@ -6,9 +6,21 @@ import type { NextRequest } from 'next/server';
 
 
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
     const supabase = await createServerSupabaseClient();
     try {
+        const q = request.nextUrl.searchParams.get('q');
+
+        if (q && q.trim().length > 0) {
+            // Use ilike for case-insensitive partial match
+            const { data: companies, error } = await supabase.from('companies').select('*').ilike('company_name', `%${q}%`);
+            if (error) {
+                console.log('supabase search error', error);
+                return NextResponse.json({ error: error.message }, { status: 500 });
+            }
+            return NextResponse.json({ companies });
+        }
+
         let { data: companies, error } = await supabase.from('companies').select('*');
 
         return NextResponse.json({ companies });

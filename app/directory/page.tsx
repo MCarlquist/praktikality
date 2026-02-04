@@ -28,6 +28,7 @@ export default function ProtectedPage() {
         <h2 className="font-bold text-2xl mb-4 text-center">Sök Företag</h2>
         <Suspense fallback={<div>Loading...</div>}>
           <SeachBar />
+          
         </Suspense>
       </div>
     </div>

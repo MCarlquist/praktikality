@@ -73,7 +73,7 @@ export default function SearchResults({ results }: { results: Company[] }) {
                 <div className="flex-1 flex flex-col">
                   <span className="text-4xl mb-2">{c.company_name}</span>
                   <div className="flex items-center gap-3 justify-center">
-                    <span className="text-md text-muted-foreground">Typ av företag: {loopThroughCompanies(c.company_type)} <br /> Antald Anställda: {c.company_size ? ` ${c.company_size} pers` : ""} <br /> {c.location ? ` Plats: ${c.location}` : ""}</span>
+                    <span className="text-md text-muted-foreground">Typ av företag: {loopThroughCompanies(c.company_type)} <br /> Antal anställda: {c.company_size ? ` ${c.company_size} pers` : ""} <br /> {c.location ? ` Plats: ${c.location}` : ""}</span>
                   </div>
 
                   <div className="mt-2 flex flex-wrap items-center justify-center gap-2">

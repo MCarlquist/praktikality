@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { Button } from "@/components/ui/button";
 
 type User = {
     id: string,
@@ -79,15 +80,34 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="mx-auto">
+        <div className="mx-auto p-5">
             <p className="text-7xl mb-3 text-center">{name}</p>
-            <div className="flex flex-1 ">
-                <div className="w-2/3 m-1">
-                <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores placeat dolore, dolorem molestiae ullam, aspernatur enim tenetur odio necessitatibus aperiam fugit libero sunt. Eum animi accusamus voluptas nesciunt modi! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus odio itaque ipsam ea dicta quis nostrum. Earum accusantium amet dolorem veniam voluptatibus alias totam! Iure, porro adipisci! Qui, id impedit.</h3>
-            </div>
-            <aside className="w-1/3">
-                <h3>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil a quas, alias labore consectetur iure vitae nulla accusamus, aperiam, aliquam eaque autem exercitationem! Vel nobis voluptatibus corporis, repellat dolores neque.</h3>
-            </aside>
+            <div className="flex flex-1 gap-10">
+                <div className="w-2/3">
+                    <div className="flex flex-col gap-3 mb-5">
+                        <h3 className="text-2xl font-bold text-center text-balance">Om Företaget</h3>
+                        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores placeat dolore, dolorem molestiae ullam, aspernatur enim tenetur odio necessitatibus aperiam fugit libero sunt. Eum animi accusamus voluptas nesciunt modi! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus odio itaque ipsam ea dicta quis nostrum. Earum accusantium amet dolorem veniam voluptatibus alias totam! Iure, porro adipisci! Qui, id impedit.</h3>
+                    </div>
+                </div>
+                <aside className="w-1/3">
+                    <div className="flex flex-col gap-2 mb-5">
+                        <p>Företags storlek: {size} personer</p>
+                        <p>Företags typ: {loopThroughCompanies(type)}</p>
+                        <p>Programmering Språk:</p>
+                        <ul className="text-md">{programmingLanguages.map((lang, index) => (
+                            <li key={index}>
+                                <p className="text-sm">-{lang}</p>
+                            </li>
+                        ))}</ul>
+                        <p>Remote: {remote ? 'Ja' : 'Nej'}</p>
+                        <p>Plats: {location}</p>
+                        <p>Kontakt: {contact}</p>
+                        <p>Hemsida: {website != null ? <a className="flex gap-1" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
+                        <div className="size-6">
+                            <Button size={'default'} variant={'default'}>Intresserad?</Button>
+                        </div>
+                    </div>
+                </aside>
             </div>
         </div>
     );

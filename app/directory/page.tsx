@@ -21,7 +21,7 @@ export default function ProtectedPage() {
       <div className="w-full">
         <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 text-center justify-center">
           <InfoIcon size="16" strokeWidth={2} />
-          Sök nedanför för att hitta ett företag som passar dig...
+          Sök nedanför för att hitta ett praktik plats som passar dig
         </div>
       </div>
       <div className="flex flex-col gap-2 justify-center text-center">

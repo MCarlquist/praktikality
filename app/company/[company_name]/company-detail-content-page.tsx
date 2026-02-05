@@ -40,13 +40,15 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setWebsite(result.company.company_site);
 
                 // Creating sample Array of users at company
-                const userTestDataArray: User[] = [{id: 'efcid83', email: 'user1@codex.com'}, {id: 'fdak382', email: 'user2@codex.com'}];
+                const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
                 setUsers(userTestDataArray);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
             } finally {
                 setLoading(false);
             }
+
+
         };
 
         if (companyName) {
@@ -54,32 +56,38 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         }
     }, [companyName]);
 
+    function loopThroughCompanies(type?: string | null) {
+        // Return a localized, user-friendly company type label for a given type string
+        switch (type) {
+            case 'startup':
+                return 'Startup';
+            case 'small_business':
+                return 'Litet företag';
+            case 'corporation':
+                return 'Stort företag';
+            case undefined:
+            case null:
+            case '':
+                return 'Okänd Typ';
+            default:
+                // If it's already a human-friendly string, just return it
+                return String(type);
+        }
+    }
+
     if (loading) return <div className="flex flex-col"><Spinner className="size-8" /> Loading Company...</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (
         <div className="mx-auto">
-            <p className="text-5xl mb-3">{name}</p>
-            <p>Company Type: {type}</p>
-            <p>Company Size: {size} people</p>
-            <p>Do they already have an intern? Yes <Checkbox checked={haveIntern === 'yes' ? true : false} /> No <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
-            <p>Programming Languages:</p>
-            <ul className="text-md">{programmingLanguages.map((lang, index) => (
-                <li key={index}>
-                    <p className="text-sm">-{lang}</p>
-                </li>
-            ))}</ul>
-            <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
-            <p>Location: {location}</p>
-            <p>Contact: <a className="text-blue-400" href={`mailto:${contact}`}>{contact}</a></p>
-            <p>Company website: {website != null ? <a className="flex gap-1" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
-
-            <div className="mt-4">
-                <p>Current Deltagare:</p>
-                <small>{
-                    users.map(((user) =>
-                        <p key={user.id}>{user.email}</p> 
-                    ))}</small>
+            <p className="text-7xl mb-3 text-center">{name}</p>
+            <div className="flex flex-1 ">
+                <div className="w-2/3 m-1">
+                <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores placeat dolore, dolorem molestiae ullam, aspernatur enim tenetur odio necessitatibus aperiam fugit libero sunt. Eum animi accusamus voluptas nesciunt modi! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus odio itaque ipsam ea dicta quis nostrum. Earum accusantium amet dolorem veniam voluptatibus alias totam! Iure, porro adipisci! Qui, id impedit.</h3>
+            </div>
+            <aside className="w-1/3">
+                <h3>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil a quas, alias labore consectetur iure vitae nulla accusamus, aperiam, aliquam eaque autem exercitationem! Vel nobis voluptatibus corporis, repellat dolores neque.</h3>
+            </aside>
             </div>
         </div>
     );

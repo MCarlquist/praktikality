@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import { getCompanyDetail } from "@/lib/ai/ai";
 
 type User = {
     id: string,
@@ -48,14 +49,28 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             } finally {
                 setLoading(false);
             }
+        };
 
-
+        const getCompanyDescription = async () => {
+            console.log('company url', website);
+            
+            
+            try {
+                const description = await getCompanyDetail(String(website));
+                console.log(description);
+            } catch (err) {
+                console.error("Error fetching company description:", err instanceof Error ? err.message : err);
+            }
         };
 
         if (companyName) {
             fetchData();
         }
-    }, [companyName]);
+        
+        if (companyName && website) {
+            getCompanyDescription();
+        }
+    }, [companyName, website]);
 
     function loopThroughCompanies(type?: string | null) {
         // Return a localized, user-friendly company type label for a given type string
@@ -84,7 +99,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <p className="text-7xl mb-3 text-center">{name}</p>
             <div className="flex flex-1 gap-10">
                 <div className="w-2/3">
-                    <div className="flex flex-col gap-3 mb-5">
+                    <div className="flex flex-col gap-3 mb-5 w-45">
                         <h3 className="text-2xl font-bold text-center text-balance">Om Företaget</h3>
                         <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores placeat dolore, dolorem molestiae ullam, aspernatur enim tenetur odio necessitatibus aperiam fugit libero sunt. Eum animi accusamus voluptas nesciunt modi! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus odio itaque ipsam ea dicta quis nostrum. Earum accusantium amet dolorem veniam voluptatibus alias totam! Iure, porro adipisci! Qui, id impedit.</h3>
                     </div>

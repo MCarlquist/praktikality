@@ -4,21 +4,8 @@ import { OpenAI } from "openai";
 
 const client = new OpenAI({
 	baseURL: "https://router.huggingface.co/v1",
-	apiKey: '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',
+	apiKey: process.env.HF_TOKEN,
 });
-
-const chatCompletion = await client.chat.completions.create({
-	model: "meta-llama/Llama-3.1-8B-Instruct:novita",
-    messages: [
-        {
-            role: "user",
-            content: "What is the capital of France?",
-        },
-    ],
-});
-
-console.log(chatCompletion.choices[0].message);
-
 
 export async function getCompanyDetail(websiteUrl: string) {
     console.log('site url', websiteUrl);

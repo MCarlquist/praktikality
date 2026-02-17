@@ -1,10 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import markdownIt from 'markdown-it-ts'
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { getCompanyDetail } from "@/lib/ai/ai";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 
 type User = {
     id: string,
@@ -25,6 +33,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [contact, setContact] = useState('');
     const [website, setWebsite] = useState('');
     const [users, setUsers] = useState<User[]>([]);
+    const [description, setDescription] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -53,11 +62,17 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
 
         const getCompanyDescription = async () => {
             console.log('company url', website);
-            
-            
+            setLoading(true);
+            const md = new markdownIt();
+
             try {
                 const description = await getCompanyDetail(String(website));
-                console.log(description);
+                if (description) {
+                    setLoading(false);
+                    setDescription(md.render(description));
+                } else {
+                    setDescription("Ingen beskrivning tillgänglig.");
+                }
             } catch (err) {
                 console.error("Error fetching company description:", err instanceof Error ? err.message : err);
             }
@@ -66,7 +81,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         if (companyName) {
             fetchData();
         }
-        
+
         if (companyName && website) {
             getCompanyDescription();
         }
@@ -99,9 +114,50 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <p className="text-7xl mb-3 text-center">{name}</p>
             <div className="flex flex-1 gap-10">
                 <div className="w-2/3">
-                    <div className="flex flex-col gap-3 mb-5 w-45">
+                    <div className="flex flex-col gap-3 mb-5">
                         <h3 className="text-2xl font-bold text-center text-balance">Om Företaget</h3>
-                        <h3>Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores placeat dolore, dolorem molestiae ullam, aspernatur enim tenetur odio necessitatibus aperiam fugit libero sunt. Eum animi accusamus voluptas nesciunt modi! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Temporibus odio itaque ipsam ea dicta quis nostrum. Earum accusantium amet dolorem veniam voluptatibus alias totam! Iure, porro adipisci! Qui, id impedit.</h3>
+                        <div className="flex justify-center items-center">
+                            <h3 className="text-balance" dangerouslySetInnerHTML={{ __html: description }}></h3>
+                        </div>
+                        <h3 className="text-2xl font-bold text-center text-balance">Project Idéer</h3>
+                        <div className="flex flex-row gap-2">
+                            <Card className="mx-auto w-full max-w-sm">
+                                <CardHeader>
+                                    <CardTitle>Projekt 1</CardTitle>
+                                    <CardDescription>Beskrivning av projekt 1</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p>Detaljer om projekt 1...</p>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button variant="default">Läs mer</Button>
+                                </CardFooter>
+                            </Card>
+                            <Card className="mx-auto w-full max-w-sm">
+                                <CardHeader>
+                                    <CardTitle>Projekt 1</CardTitle>
+                                    <CardDescription>Beskrivning av projekt 1</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p>Detaljer om projekt 1...</p>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button variant="default">Läs mer</Button>
+                                </CardFooter>
+                            </Card>
+                            <Card className="mx-auto w-full max-w-sm">
+                                <CardHeader>
+                                    <CardTitle>Projekt 1</CardTitle>
+                                    <CardDescription>Beskrivning av projekt 1</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p>Detaljer om projekt 1...</p>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button variant="default">Läs mer</Button>
+                                </CardFooter>
+                            </Card>
+                        </div>
                     </div>
                 </div>
                 <aside className="w-1/3">

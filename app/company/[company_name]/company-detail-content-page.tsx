@@ -4,7 +4,7 @@ import markdownIt from 'markdown-it-ts'
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
-import { getCompanyDetail } from "@/lib/ai/ai";
+import { getCompanyDetail, getPProjectIdeas } from "@/lib/ai/ai";
 import {
     Card,
     CardContent,
@@ -36,8 +36,10 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [description, setDescription] = useState('');
 
     useEffect(() => {
-        const fetchData = async () => {
+        const initializeData = async () => {
+            setLoading(true);
             try {
+                // Step 1: Fetch company data
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
                 const result = await response.json();
                 setName(result.company.company_name);
@@ -53,40 +55,32 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 // Creating sample Array of users at company
                 const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
                 setUsers(userTestDataArray);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "Error fetching data");
-            } finally {
 
-            }
-        };
-
-        const getCompanyDescription = async () => {
-            console.log('company url', website);
-            setLoading(true);
-            const md = new markdownIt();
-
-            try {
-                const description = await getCompanyDetail(String(website));
-                if (description) {
-                    setLoading(false);
-                    setDescription(md.render(description));
+                // Step 2: Fetch company description
+                const md = new markdownIt();
+                const descriptionText = await getCompanyDetail(result.company.company_site);
+                if (descriptionText) {
+                    setDescription(md.render(descriptionText));
                 } else {
                     setDescription("Ingen beskrivning tillgänglig.");
                 }
+
+                // Step 3: Fetch project ideas
+                const ideas = await getPProjectIdeas(result.company.company_site, result.company.programming_languages);
+                console.log(ideas);
+
+                // All data loaded successfully
+                setLoading(false);
             } catch (err) {
-                console.error("Error fetching company description:", err instanceof Error ? err.message : err);
+                setError(err instanceof Error ? err.message : "Error fetching data");
+                setLoading(false);
             }
         };
 
         if (companyName) {
-            fetchData();
+            initializeData();
         }
-
-        if (companyName && website) {
-            getCompanyDescription();
-
-        }
-    }, [companyName, website]);
+    }, [companyName]);
 
     function loopThroughCompanies(type?: string | null) {
         // Return a localized, user-friendly company type label for a given type string

@@ -41,3 +41,56 @@ Please write this in Swedish and keep the tone professional yet warm and approac
     });
     return response.choices[0].message.content;
 }
+
+// Get project ideas
+export async function getPProjectIdeas(websiteUrl: string, programmingLanguages: string[]) {
+    // Scrape the website to get actual company information
+    const scrapedData = await scrapeWebsite(websiteUrl);
+
+    // Prepare the company content for AI analysis
+    const companyInfo = `
+Website Title: ${scrapedData.title}
+Description: ${scrapedData.description}
+Key Content:
+${scrapedData.headers.slice(0, 5).join('\n')}
+${scrapedData.paragraphs.slice(0, 3).join('\n')}
+    `.trim();
+
+    const response = await client.chat.completions.create({
+        model: "meta-llama/Llama-3.1-8B-Instruct:novita",
+        messages: [
+            {
+                role: "user",
+                content: `Based on the following company information, suggest 3 realistic project ideas that an autistic individual interested in programming could work on during an internship at this company. 
+
+The project ideas should:
+- Be deeply relevant to the company's specific industry, products, and services
+- Align with the company's actual technology stack and programming practices
+- Provide meaningful learning opportunities for the intern
+- Be realistic to complete within 3-6 months
+- Leverage the following programming languages the company uses: ${programmingLanguages.join(', ')}
+- Focus on creating accessible and engaging projects
+
+For each project include html formatted sections with the following headings:
+h3 of project title
+a p tag of Detailed description of the project and its goals
+a p tag of How it aligns with the company's business
+a p tag of What technologies and programming languages would be used
+
+Keep the tone professional yet warm and approachable. Use only the information provided about the company - do not make up projects or technologies not mentioned in their actual content. only return html formatted project ideas based on the real company information provided below. For each project idea, only return an object of each project idea with formatted html inside an array in the format provided. only return the project ideas and nothing else. Do not include any introductory or concluding text. Do not include any text that is not part of the project ideas. Do not include any text that is not part of the html formatted project ideas. Do not make up any information about the company that is not present in the scraped content. If certain details are missing, simply omit them from the project ideas rather than inventing information.
+
+format:
+<h3>Project Title</h3>
+<p>Detailed description of the project and its goals</p>
+<p>How it aligns with the company's business</p>
+<p>What technologies and programming languages would be used</p>
+
+Company Information:
+${companyInfo}
+
+Please write the suggestions in Swedish.`
+            },
+        ],
+    });
+    return response.choices[0].message.content;
+}

@@ -56,7 +56,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
             } finally {
-                setLoading(false);
+
             }
         };
 
@@ -84,6 +84,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
 
         if (companyName && website) {
             getCompanyDescription();
+
         }
     }, [companyName, website]);
 
@@ -106,7 +107,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         }
     }
 
-    if (loading) return <div className="flex flex-col"><Spinner className="size-8" /> Loading Company...</div>;
+    if (loading) return <div className="flex flex-col justify-center items-center"><Spinner className="size-20" /> Laddar Företaget (det kan ta en minut)</div>;
     if (error) return <div>Error: {error}</div>;
 
     return (

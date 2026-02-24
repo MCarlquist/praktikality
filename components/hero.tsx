@@ -3,7 +3,7 @@ import { SupabaseLogo } from "./supabase-logo";
 
 export function Hero() {
 
-  const title= 'Praktikality';
+  const title = 'Praktikality';
 
 
   return (
@@ -14,6 +14,7 @@ export function Hero() {
       <p className="text-2xl lg:text-7xl font-semibold !leading-tight mx-auto max-w-xl text-center">
         { title }
       </p>
+      <p>En hub där man kan hitta sin nya praktplats och hitta rätt projekt för dom.</p>
       <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent my-8" />
     </div>
   );

@@ -116,12 +116,12 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                         <div className="flex justify-center items-center">
                             <h3 className="text-balance" dangerouslySetInnerHTML={{ __html: description }}></h3>
                         </div>
-                        <h3 className="text-2xl font-bold text-center text-balance mt-5">Project Idéer</h3>
+                        <h3 className="text-4xl font-bold text-center text-balance mt-5">Project Idéer</h3>
                         <div className="flex flex-row gap-2">
                             {projectIdeas && projectIdeas.map((idea, index) => (
                                 <Card key={index} className="flex-1">
                                     <CardHeader>
-                                        <CardTitle dangerouslySetInnerHTML={{ __html: idea.h3 }}></CardTitle>
+                                        <CardTitle className="text-2xl font-normal" dangerouslySetInnerHTML={{ __html: idea.h3 }}></CardTitle>
                                         <CardDescription dangerouslySetInnerHTML={{ __html: idea.p }}></CardDescription>
                                     </CardHeader>
                                     <CardContent>

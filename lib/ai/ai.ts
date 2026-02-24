@@ -43,7 +43,7 @@ Please write this in Swedish and keep the tone professional yet warm and approac
 }
 
 // Get project ideas
-export async function getPProjectIdeas(websiteUrl: string, programmingLanguages: string[]) {
+export async function getProjectIdeas(websiteUrl: string, programmingLanguages: string[]) {
     // Scrape the website to get actual company information
     const scrapedData = await scrapeWebsite(websiteUrl);
 
@@ -92,5 +92,40 @@ Please write the suggestions in Swedish.`
             },
         ],
     });
-    return response.choices[0].message.content;
+    
+    const content = response.choices[0].message.content || '';
+    
+    // Parse the HTML response into an array of objects with h3, p, and content properties
+    const projectIdeas: Array<{ h3: string; p: string; content: string }> = [];
+    
+    // Split by h3 tags to separate each project
+    const h3Regex = /<h3[^>]*>(.*?)<\/h3>/gi;
+    const pRegex = /<p[^>]*>(.*?)<\/p>/gi;
+    
+    let h3Match;
+    const h3Matches = [];
+    while ((h3Match = h3Regex.exec(content)) !== null) {
+        h3Matches.push(h3Match[1]);
+    }
+    
+    // Reset regex global index
+    h3Regex.lastIndex = 0;
+    pRegex.lastIndex = 0;
+    let pMatch;
+    const pMatches = [];
+    while ((pMatch = pRegex.exec(content)) !== null) {
+        pMatches.push(pMatch[1]);
+    }
+    
+    // Group paragraphs by projects (3 paragraphs per project)
+    for (let i = 0; i < Math.min(3, h3Matches.length); i++) {
+        const startIdx = i * 3;
+        projectIdeas.push({
+            h3: `<h3>${h3Matches[i]}</h3>`,
+            p: pMatches[startIdx] ? `<p>${pMatches[startIdx]}</p>` : '',
+            content: `<p>${pMatches[startIdx + 1] || ''}</p><p>${pMatches[startIdx + 2] || ''}</p>`
+        });
+    }
+    
+    return projectIdeas;
 }

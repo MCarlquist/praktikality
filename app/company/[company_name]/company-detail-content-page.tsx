@@ -4,7 +4,7 @@ import markdownIt from 'markdown-it-ts'
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
-import { getCompanyDetail, getPProjectIdeas } from "@/lib/ai/ai";
+import { getCompanyDetail, getProjectIdeas } from "@/lib/ai/ai";
 import {
     Card,
     CardContent,
@@ -34,6 +34,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [website, setWebsite] = useState('');
     const [users, setUsers] = useState<User[]>([]);
     const [description, setDescription] = useState('');
+    const [projectIdeas, setProjectIdeas] = useState<Array<{ h3: string; p: string; content?: string }> | null>(null);
 
     useEffect(() => {
         const initializeData = async () => {
@@ -66,8 +67,9 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 }
 
                 // Step 3: Fetch project ideas
-                const ideas = await getPProjectIdeas(result.company.company_site, result.company.programming_languages);
+                const ideas = await getProjectIdeas(result.company.company_site, result.company.programming_languages);
                 console.log(ideas);
+                setProjectIdeas(ideas);
 
                 // All data loaded successfully
                 setLoading(false);
@@ -114,44 +116,19 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                         <div className="flex justify-center items-center">
                             <h3 className="text-balance" dangerouslySetInnerHTML={{ __html: description }}></h3>
                         </div>
-                        <h3 className="text-2xl font-bold text-center text-balance">Project Idéer</h3>
+                        <h3 className="text-2xl font-bold text-center text-balance mt-5">Project Idéer</h3>
                         <div className="flex flex-row gap-2">
-                            <Card className="mx-auto w-full max-w-sm">
-                                <CardHeader>
-                                    <CardTitle>Projekt 1</CardTitle>
-                                    <CardDescription>Beskrivning av projekt 1</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p>Detaljer om projekt 1...</p>
-                                </CardContent>
-                                <CardFooter>
-                                    <Button variant="default">Läs mer</Button>
-                                </CardFooter>
-                            </Card>
-                            <Card className="mx-auto w-full max-w-sm">
-                                <CardHeader>
-                                    <CardTitle>Projekt 1</CardTitle>
-                                    <CardDescription>Beskrivning av projekt 1</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p>Detaljer om projekt 1...</p>
-                                </CardContent>
-                                <CardFooter>
-                                    <Button variant="default">Läs mer</Button>
-                                </CardFooter>
-                            </Card>
-                            <Card className="mx-auto w-full max-w-sm">
-                                <CardHeader>
-                                    <CardTitle>Projekt 1</CardTitle>
-                                    <CardDescription>Beskrivning av projekt 1</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <p>Detaljer om projekt 1...</p>
-                                </CardContent>
-                                <CardFooter>
-                                    <Button variant="default">Läs mer</Button>
-                                </CardFooter>
-                            </Card>
+                            {projectIdeas && projectIdeas.map((idea, index) => (
+                                <Card key={index} className="flex-1">
+                                    <CardHeader>
+                                        <CardTitle dangerouslySetInnerHTML={{ __html: idea.h3 }}></CardTitle>
+                                        <CardDescription dangerouslySetInnerHTML={{ __html: idea.p }}></CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {idea.content && <div dangerouslySetInnerHTML={{ __html: idea.content }}></div>}
+                                    </CardContent>
+                                </Card>
+                            ))}
                         </div>
                     </div>
                 </div>

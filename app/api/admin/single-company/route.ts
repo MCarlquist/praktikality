@@ -26,7 +26,12 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: error.message }, { status: 500 });
         }
 
-        return NextResponse.json({ company });
+        // add cache headers so Vercel/edge can keep this response for an hour
+        return NextResponse.json({ company }, {
+            headers: {
+                'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+            },
+        });
     } catch (error) {
         console.log('error', error);
         return NextResponse.json({ error: 'Failed to fetch company' }, { status: 500 });

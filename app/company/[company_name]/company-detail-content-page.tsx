@@ -124,6 +124,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
 
     // User wants to be a intern at this company.
     const joinCompany = async () => {
+        const user = await fetchSignedInUser();
+        const userEmail = user?.email;
         try {
             const api = await fetch('/api/email', {
                 method: 'POST',
@@ -131,7 +133,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    deltagare: 'Signed in User',
+                    deltagare: userEmail,
                     foretag: companyName
                 })
             });

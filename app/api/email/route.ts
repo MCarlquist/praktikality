@@ -1,5 +1,10 @@
 import { sendEmail } from "@/lib/email";
 
+/**
+ * Processes a participant job-interest submission by sending its details by email.
+ *
+ * @returns A JSON response indicating successful processing
+ */
 export async function POST(request: Request) {
     const body = await request.json();
 

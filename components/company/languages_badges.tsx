@@ -7,6 +7,11 @@ type Language = {
 }
 
 
+/**
+ * Displays programming languages as a list of secondary badges.
+ *
+ * @returns A styled list of badges for the provided programming languages.
+ */
 export default function languagesBadges({ languages }: Language) {
     const [programmingLanguages, setProgrammingLanguages] = useState([]);
 

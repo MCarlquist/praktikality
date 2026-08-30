@@ -60,7 +60,27 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     // TODO: User is interested in a company, add that logic.
     // User wants to be a intern at this company.
     const joinCompany = async () => {
-        alert(companyName);
+       try {
+        const api = await fetch('/api/email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                deltagare: 'Signed in User',
+                foretag: companyName
+            })
+        });
+        if(!api.ok) {
+            throw new Error(`Request Failed: ${api.status}`);
+        }
+        const data = await api.json();
+        console.log('data is: ', data);
+        
+       } catch (error) {
+        console.error('error in fetch: ', error);
+       }
+        
     }
 
     if (loading) return <div className="flex flex-col"><Spinner className="size-8" /> Loading Company...</div>;

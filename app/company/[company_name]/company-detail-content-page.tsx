@@ -35,7 +35,25 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [website, setWebsite] = useState('');
     const [users, setUsers] = useState<User[]>([]);
     const [alreadyInTable, setAlreadyInTable] = useState(false);
+    const [signedUpUsers, setSignedUpUsers] = useState(0);
 
+
+    // fetch signed up users to company.
+    const fetchSignedUpUsersToCompany = async () => {
+
+        let { data: companies, error } = await supabase
+            .from('companies')
+            .select('deltagare')
+            .eq('company_name', companyName)
+            .single();
+                       
+        if (!companies?.deltagare) {
+            return 0;
+        }
+        
+        return companies?.deltagare.length;
+
+    };
 
 
     // Get currently signed in user.
@@ -107,6 +125,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 // TODO: fetch signed up users to company from database.
                 // Creating sample Array of users at company
                 const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
+                const fetchUsers = await fetchSignedUpUsersToCompany();
+                setSignedUpUsers(fetchUsers)
                 setUsers(userTestDataArray);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
@@ -118,6 +138,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         if (companyName) {
             fetchData();
             isIntrested();
+
 
         }
     }, [companyName]);
@@ -196,22 +217,19 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <div>
                 <p className="text-5xl mb-3">{name}</p>
                 <p>Company Type: {type}</p>
-                <p>Company Size: {size} people</p>
-                <p>Do they already have an intern? Yes <Checkbox checked={haveIntern === 'yes' ? true : false} /> No <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
+                <p>Company Size: <span className="font-bold">{size}</span> people</p>
+                <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold': ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold': ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
 
                 <LanguagesBadges languages={programmingLanguages} />
 
                 <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
-                <p>Location: {location}</p>
-                <p>Contact: <a className="text-blue-400" href={`mailto:${contact}`}>{contact}</a></p>
-                <p>Company website: {website != null ? <a className="flex gap-1" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
+                <p>Location: <span className="font-bold">{location}</span></p>
+                <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>
+                <p>Company website: {website != null ? <a className="flex gap-1 font-bold" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
 
                 <div className="mt-4">
-                    <p>Current Deltagare:</p>
-                    <small>{
-                        users.map(((user) =>
-                            <p key={user.id}>{user.email}</p>
-                        ))}</small>
+                    <p>Antal Deltagare redan med denna företag: <span className="font-bold"> { signedUpUsers }</span></p>
+
                 </div>
             </div>
             <div className="flex flex-col text-center gap-3">

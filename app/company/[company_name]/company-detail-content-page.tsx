@@ -47,6 +47,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             .eq('company_name', companyName)
             .single();
                        
+        if (error) throw error;
+
         if (!companies?.deltagare) {
             return 0;
         }

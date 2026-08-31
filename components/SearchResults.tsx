@@ -41,20 +41,16 @@ export default function SearchResults({ results }: { results: Company[] }) {
     }
   }
 
-  function getRemoteBadge(remote?: boolean | string | null) {
-    // Prefer boolean values (true = remote, false = on-site). For backward compatibility, accept some strings.
-    if (typeof remote === 'string') {
-      const r = remote.toLowerCase().trim();
-      if (r === 'hybrid') return { label: 'Hybrid', variant: 'secondary' as const };
-      if (r === 'remote' || r === 'true' || r === '1') return { label: 'På Distans', variant: 'default' as const };
-      return { label: 'På Plats', variant: 'outline' as const };
+  function getRemoteBadge(remote?: boolean | string | null): {
+    variant: "secondary" | "outline";
+    label: string;
+  } {
+    
+    if (remote === 'yes') {
+      return { variant: "secondary", label: "På Distans" };
     }
 
-    if (remote === null || remote === undefined) {
-      return { label: 'Unknown', variant: 'outline' as const };
-    }
-
-    return remote ? { label: 'På Distans', variant: 'default' as const } : { label: 'På Plats', variant: 'outline' as const };
+    return { variant: "outline", label: "På Plats" };
   }
 
   return (

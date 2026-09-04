@@ -28,6 +28,11 @@ export async function AuthButton() {
           <Link href="/admin">Admin</Link>
         </Button>
       ) }
+      {
+        <Button asChild size={'sm'} variant={'default'}>
+          <Link href={'/directory'}>Directory</Link>
+        </Button>
+      }
       <LogoutButton />
     </div>
   ) : (

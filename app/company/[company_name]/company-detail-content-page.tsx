@@ -116,6 +116,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 },
                 body: JSON.stringify({
                     languages: programmingLanguages,
+                    // TODO: this is to be dynamic ev.
                     type: 'An E-commerce company'
                 })
             });
@@ -280,7 +281,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <section className="mt-4">
                 <div className="text-center flex flex-col gap-4">
                     <p className="font-bold text-center">Låter detta intressant? Klicka på knappen nedan för att generera projekt idéer.</p>
-                <Button onClick={generateAI}>Generera Idéer</Button>
+                <Button onClick={generateAI} disabled={generatingAI}>Generera Idéer</Button>
                 </div>
                 {loadedAI ?
                  <article className="mt-6">

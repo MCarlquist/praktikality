@@ -6,6 +6,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import LanguagesBadges from "@/components/company/languages_badges";
 import { createClient } from "@/lib/supabase/client";
+import Markdown from 'react-markdown';
 
 //! Calls supabase browser client.
 const supabase = createClient();
@@ -36,6 +37,9 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [users, setUsers] = useState<User[]>([]);
     const [alreadyInTable, setAlreadyInTable] = useState(false);
     const [signedUpUsers, setSignedUpUsers] = useState(0);
+    const [aiContent, setAIContent] = useState('');
+    const [loadedAI, setLoadedAI] = useState(false);
+    const [generatingAI, setGeneratingAI] = useState(false);
 
 
     // fetch signed up users to company.
@@ -46,13 +50,13 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             .select('deltagare')
             .eq('company_name', companyName)
             .single();
-                       
+
         if (error) throw error;
 
         if (!companies?.deltagare) {
             return 0;
         }
-        
+
         return companies?.deltagare.length;
 
     };
@@ -98,6 +102,36 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         const companyTable = await fetchCompanyTable();
 
         return companyTable.includes(userId);
+    };
+
+    // Send data to AI with languages of the company to paint on projekt ideas.
+    const generateAI =  async () => {
+        setGeneratingAI(true);
+        setLoadedAI(false);
+        try {
+            const aiAPI = await fetch('/api/ai/company', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    languages: programmingLanguages,
+                    type: 'An E-commerce company'
+                })
+            });
+            if(!aiAPI.ok) {
+                throw new Error(`Request failed: ${aiAPI.status}`);
+            }
+
+            const data = await aiAPI.json();
+            setAIContent(data.message);
+            setLoadedAI(true);
+            
+        } catch (error) {
+            console.error('error generating AI content: ', error);
+        } finally {
+            setGeneratingAI(false);
+        }
     };
 
     useEffect(() => {
@@ -215,32 +249,47 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="mx-auto flex flex-auto gap-5">
-            <div>
-                <p className="text-5xl mb-3">{name}</p>
-                <p>Company Type: {type}</p>
-                <p>Company Size: <span className="font-bold">{size}</span> people</p>
-                <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold': ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold': ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
+        <div>
+            <div className="mx-auto flex flex-auto gap-5">
+                <div>
+                    <p className="text-5xl mb-3">{name}</p>
+                    <p>Company Type: {type}</p>
+                    <p>Company Size: <span className="font-bold">{size}</span> people</p>
+                    <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold' : ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold' : ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
 
-                <LanguagesBadges languages={programmingLanguages} />
+                    <LanguagesBadges languages={programmingLanguages} />
 
-                <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
-                <p>Location: <span className="font-bold">{location}</span></p>
-                <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>
-                <p>Company website: {website != null ? <a className="flex gap-1 font-bold" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
+                    <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
+                    <p>Location: <span className="font-bold">{location}</span></p>
+                    <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>
+                    <p>Company website: {website != null ? <a className="flex gap-1 font-bold" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
 
-                <div className="mt-4">
-                    <p>Antal Deltagare redan med denna företag: <span className="font-bold"> { signedUpUsers }</span></p>
+                    <div className="mt-4">
+                        <p>Antal Deltagare redan med denna företag: <span className="font-bold"> {signedUpUsers}</span></p>
 
+                    </div>
+                </div>
+                <div className="flex flex-col text-center gap-3">
+                    <h3 className="text-2xl">Vill du ha praktik hos dom?</h3>
+                    <p>Intresserad?</p>
+                    <Button onClick={joinCompany} disabled={alreadyInTable}>
+                        {alreadyInTable ? 'Redan Skickat Intresse' : 'Ja, Gärna'}
+                    </Button>
                 </div>
             </div>
-            <div className="flex flex-col text-center gap-3">
-                <h3 className="text-2xl">Vill du ha praktik hos dom?</h3>
-                <p>Intresserad?</p>
-                <Button onClick={joinCompany} disabled={alreadyInTable}>
-                    {alreadyInTable ? 'Redan Skickat Intresse' : 'Ja, Gärna'}
-                </Button>
-            </div>
+            <section className="mt-4">
+                <div className="text-center flex flex-col gap-4">
+                    <p className="font-bold text-center">Låter detta intressant? Klicka på knappen nedan för att generera projekt idéer.</p>
+                <Button onClick={generateAI}>Generera Idéer</Button>
+                </div>
+                {loadedAI ?
+                 <article className="mt-6">
+                    <p className="text-3xl text-center">Projekt Idéer:</p>
+                    <Markdown>{aiContent}</Markdown>
+                </article>
+                
+                : generatingAI ? <div className="flex flex-col justify-center items-center mt-5"><Spinner className="size-8" /> Skapar Idéer</div> : null}
+            </section>
         </div>
     );
 }

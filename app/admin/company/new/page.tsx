@@ -13,6 +13,16 @@ import {
     RadioGroup,
     RadioGroupItem,
 } from "@/components/ui/radio-group";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -27,6 +37,7 @@ type InputFormValues = {
     remote: string
     location: string;
     company_site: string;
+    company_speciality: string;
 };
 
 
@@ -71,8 +82,18 @@ export default function NewCompanyPage() {
             remote: "",
             location: "",
             company_site: "",
+            company_speciality: ""
         },
     });
+
+    // Type of company_speciality
+    const items = [
+        { label: "E-Handel", value: "ecommerce" },
+        { label: "Konsultbolag", value: "konsult" },
+        { label: "Skola", value: "skola" },
+        { label: "SaaS", value: "saas" },
+        { label: "TV Spel", value: "tvspel" },
+    ]
 
 
 
@@ -108,145 +129,167 @@ export default function NewCompanyPage() {
                     autoClose: 3500,
                     theme: 'dark',
                 });
-                
+
             }
 
         } catch (error) {
-    } finally {
-        setLoading(false);
-    }
-};
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
 
-return (
-    <div className="p-6">
-        <ToastContainer />
-        <h1 className="text-2xl font-bold mb-6">Create New Company</h1>
-        <form onSubmit={handleSubmit(handleSubmits)} className="max-w-md space-y-4">
-            <Controller
-                name="company_name"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => <Input {...field} placeholder="Company Name" className="w-full px-3 py-2 border rounded" />}
-            />
+    return (
+        <div className="p-6">
+            <ToastContainer />
+            <h1 className="text-2xl font-bold mb-6">Create New Company</h1>
+            <form onSubmit={handleSubmit(handleSubmits)} className="max-w-md space-y-4">
+                <Controller
+                    name="company_name"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input {...field} placeholder="Company Name" className="w-full px-3 py-2 border rounded" />}
+                />
 
-            {errors.company_name && <span className="text-red-500 text-sm">This field is required</span>}
+                {errors.company_name && <span className="text-red-500 text-sm">This field is required</span>}
 
-            <Controller
-                name="company_site"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => <Input {...field} placeholder="Company Site" className="w-full px-3 py-2 border rounded" />}
-            />
+                <Controller
+                    name="company_site"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input {...field} placeholder="Company Site" className="w-full px-3 py-2 border rounded" />}
+                />
 
-            {errors.company_site && <span className="text-red-500 text-sm">This field is required</span>}
+                <Controller
+                    name="company_speciality"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field}) => (
+                        <Select value={field.value} onValueChange={field.onChange}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select speciality" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    {items.map((item) => (
+                                        <SelectItem key={item.value} value={item.value}>
+                                            {item.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    )}
+                    />
 
-            <Controller
-                name="company_contact"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => <Input type="email" {...field} placeholder="Company Contact" className="w-full px-3 py-2 border rounded" />}
-            />
+                {errors.company_site && <span className="text-red-500 text-sm">This field is required</span>}
 
-            {errors.company_contact && <span className="text-red-500 text-sm">This field is required</span>}
+                <Controller
+                    name="company_contact"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input type="email" {...field} placeholder="Company Contact" className="w-full px-3 py-2 border rounded" />}
+                />
 
-            {/* multiple select of company size */}
-            <p>Company Size (number of people)</p>
-            <Controller name="company_size" control={control} rules={{ required: true }} render={({ field }) => (
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="1-5" id="r1" />
-                        <Label htmlFor="r1">1-5</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="6-20" id="r2" />
-                        <Label htmlFor="r2">6-20</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="21+" id="r3" />
-                        <Label htmlFor="r3">21+</Label>
-                    </div>
-                </RadioGroup>)}
-            />
-            {errors.company_size && <span className="text-red-500 text-sm">This field is required</span>}
-            <p>Company Type</p>
-            <Controller name="company_type" control={control} rules={{ required: true }} render={({ field }) => (
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="startup" id="t11" />
-                        <Label htmlFor="t11">Start up</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="small_business" id="t2" />
-                        <Label htmlFor="t2">Small Business</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="corporation" id="t3" />
-                        <Label htmlFor="t3">Corporation</Label>
-                    </div>
-                </RadioGroup>)}
-            />
-            {errors.company_type && <span className="text-red-500 text-sm">This field is required</span>}
+                {errors.company_contact && <span className="text-red-500 text-sm">This field is required</span>}
 
-            {/* have intern radio group */}
-            <p>Already someone at Codex an intern?</p>
-            <Controller name="have_intern" control={control} rules={{ required: true }} render={({ field }) => (
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="yes" id="i1" />
-                        <Label htmlFor="i1">Yes</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="no" id="i2" />
-                        <Label htmlFor="i2">No</Label>
-                    </div>
-                </RadioGroup>)}
-            />
-            {errors.have_intern && <span className="text-red-500 text-sm">This field is required</span>}
+                {/* multiple select of company size */}
+                <p>Company Size (number of people)</p>
+                <Controller name="company_size" control={control} rules={{ required: true }} render={({ field }) => (
+                    <RadioGroup value={field.value} onValueChange={field.onChange}>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="1-5" id="r1" />
+                            <Label htmlFor="r1">1-5</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="6-20" id="r2" />
+                            <Label htmlFor="r2">6-20</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="21+" id="r3" />
+                            <Label htmlFor="r3">21+</Label>
+                        </div>
+                    </RadioGroup>)}
+                />
+                {errors.company_size && <span className="text-red-500 text-sm">This field is required</span>}
+                <p>Company Type</p>
+                <Controller name="company_type" control={control} rules={{ required: true }} render={({ field }) => (
+                    <RadioGroup value={field.value} onValueChange={field.onChange}>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="startup" id="t11" />
+                            <Label htmlFor="t11">Start up</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="small_business" id="t2" />
+                            <Label htmlFor="t2">Small Business</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="corporation" id="t3" />
+                            <Label htmlFor="t3">Corporation</Label>
+                        </div>
+                    </RadioGroup>)}
+                />
+                {errors.company_type && <span className="text-red-500 text-sm">This field is required</span>}
 
-            {/* multiple select of programming languages */}
-            <p>Programming Languages used by company</p>
-            <Controller
-                name="programming_languages"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => (
-                    <MultiSelect {...field} options={programmingLanguages}
-                        onValueChange={field.onChange} value={field.value}
-                        placeholder="Which programming languages do they use?" />
-                )}
-            />
-            {errors.programming_languages && <span className="text-red-500 text-sm">This field is required</span>}
-            {/* remote checkbox */}
-            <p>Is this remote?</p>
-            <Controller name="remote" control={control} rules={{ required: true }} render={({ field }) => (
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="yes" id="remote-yes" />
-                        <Label htmlFor="remote-yes">Yes</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="no" id="remote-no" />
-                        <Label htmlFor="remote-no">No</Label>
-                    </div>
-                </RadioGroup>)}
-            />
-            {errors.remote && <span className="text-red-500 text-sm">This field is required</span>}
+                {/* have intern radio group */}
+                <p>Already someone at Codex an intern?</p>
+                <Controller name="have_intern" control={control} rules={{ required: true }} render={({ field }) => (
+                    <RadioGroup value={field.value} onValueChange={field.onChange}>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="yes" id="i1" />
+                            <Label htmlFor="i1">Yes</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="no" id="i2" />
+                            <Label htmlFor="i2">No</Label>
+                        </div>
+                    </RadioGroup>)}
+                />
+                {errors.have_intern && <span className="text-red-500 text-sm">This field is required</span>}
 
-            {/* location */}
-            <Controller
-                name="location"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => <Input {...field} placeholder="Location" className="w-full px-3 py-2 border rounded" />}
-            />
-            {errors.location && <span className="text-red-500 text-sm">This field is required</span>}
-            <br />
-            <Button type="submit" disabled={loading} variant={'default'}>
-                {loading ? <>Creating... <Spinner /></> : 'Create Company'}
-            </Button>
-        </form>
-    </div>
-);
+                {/* multiple select of programming languages */}
+                <p>Programming Languages used by company</p>
+                <Controller
+                    name="programming_languages"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                        <MultiSelect {...field} options={programmingLanguages}
+                            onValueChange={field.onChange} value={field.value}
+                            placeholder="Which programming languages do they use?" />
+                    )}
+                />
+                {errors.programming_languages && <span className="text-red-500 text-sm">This field is required</span>}
+                {/* remote checkbox */}
+                <p>Is this remote?</p>
+                <Controller name="remote" control={control} rules={{ required: true }} render={({ field }) => (
+                    <RadioGroup value={field.value} onValueChange={field.onChange}>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="yes" id="remote-yes" />
+                            <Label htmlFor="remote-yes">Yes</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="no" id="remote-no" />
+                            <Label htmlFor="remote-no">No</Label>
+                        </div>
+                    </RadioGroup>)}
+                />
+                {errors.remote && <span className="text-red-500 text-sm">This field is required</span>}
+
+                {/* location */}
+                <Controller
+                    name="location"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Input {...field} placeholder="Location" className="w-full px-3 py-2 border rounded" />}
+                />
+                {errors.location && <span className="text-red-500 text-sm">This field is required</span>}
+                <br />
+                <Button type="submit" disabled={loading} variant={'default'}>
+                    {loading ? <>Creating... <Spinner /></> : 'Create Company'}
+                </Button>
+            </form>
+        </div>
+    );
 }

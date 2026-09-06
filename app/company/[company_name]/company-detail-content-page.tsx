@@ -40,6 +40,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [aiContent, setAIContent] = useState('');
     const [loadedAI, setLoadedAI] = useState(false);
     const [generatingAI, setGeneratingAI] = useState(false);
+    const [speciality, setSpeciality] = useState('');
 
 
     // fetch signed up users to company.
@@ -145,6 +146,24 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             }
         };
 
+        const setSpecialityFn = (speciality: string) => {
+            switch (speciality) {
+                    case 'saas':
+                        console.log(speciality);
+                        return 'SaaS';
+                    case 'ecommerce':
+                        return 'E-Handel';
+                    case 'konsult':
+                        return 'Konsult Bolag';
+                    case 'skola':
+                        return 'Skola';
+                    case 'tvspel':
+                        return 'Tv Spel';
+                    default:
+                        return 'inte angivet';
+                }
+        };
+
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
@@ -158,6 +177,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setLocation(result.company.location);
                 setContact(result.company.company_contact);
                 setWebsite(result.company.company_site);
+                let speciality = result.company.company_speciality;
+                setSpeciality(setSpecialityFn(speciality))
 
                 // TODO: fetch signed up users to company from database.
                 // Creating sample Array of users at company
@@ -259,7 +280,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold' : ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold' : ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
 
                     <LanguagesBadges languages={programmingLanguages} />
-
+                    <p>Företags Inriktning: {speciality}</p>
                     <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
                     <p>Location: <span className="font-bold">{location}</span></p>
                     <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>

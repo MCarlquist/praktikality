@@ -40,6 +40,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [aiContent, setAIContent] = useState('');
     const [loadedAI, setLoadedAI] = useState(false);
     const [generatingAI, setGeneratingAI] = useState(false);
+    const [speciality, setSpeciality] = useState('');
 
 
     // fetch signed up users to company.
@@ -117,7 +118,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 body: JSON.stringify({
                     languages: programmingLanguages,
                     // TODO: this is to be dynamic ev.
-                    type: 'An E-commerce company'
+                    type: speciality
                 })
             });
             if(!aiAPI.ok) {
@@ -145,6 +146,23 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             }
         };
 
+        const setSpecialityFn = (speciality: string) => {
+            switch (speciality) {
+                    case 'saas':
+                        return 'SaaS';
+                    case 'ecommerce':
+                        return 'E-Handel';
+                    case 'consulting':
+                        return 'Konsult Bolag';
+                    case 'school':
+                        return 'Skola';
+                    case 'videogame':
+                        return 'Tv Spel';
+                    default:
+                        return 'inte angivet';
+                }
+        };
+
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
@@ -158,13 +176,12 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setLocation(result.company.location);
                 setContact(result.company.company_contact);
                 setWebsite(result.company.company_site);
+                let speciality = result.company.company_speciality;
+                setSpeciality(setSpecialityFn(speciality))
 
                 // TODO: fetch signed up users to company from database.
-                // Creating sample Array of users at company
-                const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
                 const fetchUsers = await fetchSignedUpUsersToCompany();
                 setSignedUpUsers(fetchUsers)
-                setUsers(userTestDataArray);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
             } finally {
@@ -259,7 +276,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold' : ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold' : ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
 
                     <LanguagesBadges languages={programmingLanguages} />
-
+                    <p>Företags Inriktning: {speciality}</p>
                     <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
                     <p>Location: <span className="font-bold">{location}</span></p>
                     <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>

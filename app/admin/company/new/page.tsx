@@ -89,10 +89,10 @@ export default function NewCompanyPage() {
     // Type of company_speciality
     const items = [
         { label: "E-Handel", value: "ecommerce" },
-        { label: "Konsultbolag", value: "konsult" },
-        { label: "Skola", value: "skola" },
+        { label: "Konsultbolag", value: "consulting" },
+        { label: "Skola", value: "school" },
         { label: "SaaS", value: "saas" },
-        { label: "TV Spel", value: "tvspel" },
+        { label: "TV Spel", value: "videogame" },
     ]
 
 

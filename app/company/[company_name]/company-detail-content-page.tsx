@@ -118,7 +118,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 body: JSON.stringify({
                     languages: programmingLanguages,
                     // TODO: this is to be dynamic ev.
-                    type: 'An E-commerce company'
+                    type: speciality
                 })
             });
             if(!aiAPI.ok) {
@@ -149,15 +149,14 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         const setSpecialityFn = (speciality: string) => {
             switch (speciality) {
                     case 'saas':
-                        console.log(speciality);
                         return 'SaaS';
                     case 'ecommerce':
                         return 'E-Handel';
-                    case 'konsult':
+                    case 'consulting':
                         return 'Konsult Bolag';
-                    case 'skola':
+                    case 'school':
                         return 'Skola';
-                    case 'tvspel':
+                    case 'videogame':
                         return 'Tv Spel';
                     default:
                         return 'inte angivet';
@@ -181,11 +180,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setSpeciality(setSpecialityFn(speciality))
 
                 // TODO: fetch signed up users to company from database.
-                // Creating sample Array of users at company
-                const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
                 const fetchUsers = await fetchSignedUpUsersToCompany();
                 setSignedUpUsers(fetchUsers)
-                setUsers(userTestDataArray);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
             } finally {

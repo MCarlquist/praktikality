@@ -34,13 +34,13 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [location, setLocation] = useState('');
     const [contact, setContact] = useState('');
     const [website, setWebsite] = useState('');
-    const [users, setUsers] = useState<User[]>([]);
     const [alreadyInTable, setAlreadyInTable] = useState(false);
     const [signedUpUsers, setSignedUpUsers] = useState(0);
     const [aiContent, setAIContent] = useState('');
     const [loadedAI, setLoadedAI] = useState(false);
     const [generatingAI, setGeneratingAI] = useState(false);
     const [speciality, setSpeciality] = useState('');
+    const [worklocation, setWorkLocation] = useState('');
 
 
     // fetch signed up users to company.
@@ -117,7 +117,6 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 },
                 body: JSON.stringify({
                     languages: programmingLanguages,
-                    // TODO: this is to be dynamic ev.
                     type: speciality
                 })
             });
@@ -163,12 +162,38 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 }
         };
 
+        const setWOrkLocationFn = (location: string) => {
+            switch (location) {
+                case 'on-site':
+                    return 'På Plats'
+                case 'distans':
+                    return 'På Distans'
+                case 'hybrid':
+                    return 'Hybrid'
+                default:
+                    return 'inte angivet';
+            }
+        };
+
+        const setTypeFn = (type: string) => {
+            switch (type) {
+                case 'small_business':
+                    return 'Litet Företag'
+                case 'corporation':
+                    return 'Koncern'
+                case 'startup':
+                    return 'Startup'
+                default:
+                    return 'inte angivet'
+            }
+        };
+
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
                 const result = await response.json();
                 setName(result.company.company_name);
-                setType(result.company.company_type);
+                setType(setTypeFn(result.company.company_type));
                 setSize(result.company.company_size);
                 setHaveIntern(result.company.have_intern);
                 setProgrammingLanguages(result.company.programming_languages);
@@ -178,6 +203,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setWebsite(result.company.company_site);
                 let speciality = result.company.company_speciality;
                 setSpeciality(setSpecialityFn(speciality))
+                let work_location = result.company.work_location;
+                setWorkLocation(setWOrkLocationFn(work_location));
 
                 // TODO: fetch signed up users to company from database.
                 const fetchUsers = await fetchSignedUpUsersToCompany();
@@ -271,13 +298,13 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <div className="mx-auto flex flex-auto gap-5">
                 <div>
                     <p className="text-5xl mb-3">{name}</p>
-                    <p>Company Type: {type}</p>
+                    <p>Company Type: <span className="font-bold"> {type}</span></p>
                     <p>Company Size: <span className="font-bold">{size}</span> people</p>
                     <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold' : ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold' : ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
 
                     <LanguagesBadges languages={programmingLanguages} />
                     <p>Företags Inriktning: {speciality}</p>
-                    <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
+                    <p>Arbetsplats: <span className="font-bold">{worklocation}</span> </p>
                     <p>Location: <span className="font-bold">{location}</span></p>
                     <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>
                     <p>Company website: {website != null ? <a className="flex gap-1 font-bold" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>

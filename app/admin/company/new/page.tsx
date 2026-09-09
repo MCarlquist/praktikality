@@ -34,7 +34,7 @@ type InputFormValues = {
     company_size: string;
     have_intern: string;
     programming_languages: string[];
-    remote: string
+    work_location: string
     location: string;
     company_site: string;
     company_speciality: string;
@@ -79,10 +79,10 @@ export default function NewCompanyPage() {
             company_size: "",
             have_intern: "",
             programming_languages: [],
-            remote: "",
+            work_location: "",
             location: "",
             company_site: "",
-            company_speciality: ""
+            company_speciality: "",
         },
     });
 
@@ -161,6 +161,8 @@ export default function NewCompanyPage() {
                     render={({ field }) => <Input {...field} placeholder="Company Site" className="w-full px-3 py-2 border rounded" />}
                 />
 
+                {errors.company_site && <span className="text-red-500 text-sm">This field is required</span>}
+
                 <Controller
                     name="company_speciality"
                     control={control}
@@ -183,7 +185,7 @@ export default function NewCompanyPage() {
                     )}
                     />
 
-                {errors.company_site && <span className="text-red-500 text-sm">This field is required</span>}
+                {errors.company_speciality && <span className="text-red-500 text-sm">This field is required</span>}
 
                 <Controller
                     name="company_contact"
@@ -261,21 +263,26 @@ export default function NewCompanyPage() {
                     )}
                 />
                 {errors.programming_languages && <span className="text-red-500 text-sm">This field is required</span>}
-                {/* remote checkbox */}
-                <p>Is this remote?</p>
-                <Controller name="remote" control={control} rules={{ required: true }} render={({ field }) => (
+                {/* work location checkbox */}
+                <p>Work Location</p>
+                <Controller name="work_location" control={control} rules={{ required: true }} render={({ field }) => (
                     <RadioGroup value={field.value} onValueChange={field.onChange}>
                         <div className="flex items-center gap-3">
-                            <RadioGroupItem value="yes" id="remote-yes" />
-                            <Label htmlFor="remote-yes">Yes</Label>
+                            <RadioGroupItem value="hybrid" id="location-hybrid" />
+                            <Label htmlFor="location-hybrid">Hybrid</Label>
                         </div>
                         <div className="flex items-center gap-3">
-                            <RadioGroupItem value="no" id="remote-no" />
-                            <Label htmlFor="remote-no">No</Label>
+                            <RadioGroupItem value="on-site" id="location-on-site" />
+                            <Label htmlFor="location-on-site">På Plats</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="distans" id="location-distans" />
+                            <Label htmlFor="location-distans">På Distans</Label>
                         </div>
                     </RadioGroup>)}
                 />
-                {errors.remote && <span className="text-red-500 text-sm">This field is required</span>}
+                {errors.work_location && <span className="text-red-500 text-sm">This field is required</span>}
+
 
                 {/* location */}
                 <Controller

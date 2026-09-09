@@ -30,8 +30,6 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
     const [wantInternship, setWantInternship] = useState<boolean>(row.original.want_internship ?? false);
     const { email, companies_they_work_at } = row.original;
 
-    console.log(row.original)
-
     // convert companies_they_work_at (array of JSON strings) into an array of objects
     const companies = (companies_they_work_at || []).map((item: string) => {
         try {

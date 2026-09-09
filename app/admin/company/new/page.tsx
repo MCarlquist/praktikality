@@ -269,7 +269,7 @@ export default function NewCompanyPage() {
                     <RadioGroup value={field.value} onValueChange={field.onChange}>
                         <div className="flex items-center gap-3">
                             <RadioGroupItem value="hybrid" id="location-hybrid" />
-                            <Label htmlFor="hybrid">Hybrid</Label>
+                            <Label htmlFor="location-hybrid">Hybrid</Label>
                         </div>
                         <div className="flex items-center gap-3">
                             <RadioGroupItem value="on-site" id="location-on-site" />

@@ -162,6 +162,12 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 }
         };
 
+        /**
+         * Converts a stored workplace code to its Swedish display label.
+         *
+         * @param location - The stored workplace code.
+         * @returns The corresponding label, or "inte angivet" when the code is not recognized.
+         */
         const setWOrkLocationFn = (location: string) => {
             switch (location) {
                 case 'on-site':
@@ -175,6 +181,12 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             }
         };
 
+        /**
+         * Converts a stored company type to its Swedish display label.
+         *
+         * @param type - The stored company type code.
+         * @returns The corresponding label, or "inte angivet" when the code is not recognized.
+         */
         const setTypeFn = (type: string) => {
             switch (type) {
                 case 'small_business':
@@ -188,6 +200,11 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             }
         };
 
+        /**
+         * Loads the company's details and participant count into the component state.
+         *
+         * Company type, specialty, and workplace codes are converted to display labels.
+         */
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);

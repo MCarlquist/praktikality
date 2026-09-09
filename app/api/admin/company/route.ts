@@ -31,6 +31,12 @@ export async function GET(request: NextRequest) {
 
 }
 
+/**
+ * Creates a company from the fields in the request's JSON body.
+ *
+ * @param request - A request containing the company details to store.
+ * @returns A JSON response with the created company, a database error, or an unexpected-failure message.
+ */
 export async function POST(request: Request) {
 
 

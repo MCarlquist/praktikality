@@ -42,6 +42,9 @@ type InputFormValues = {
 
 
 
+/**
+ * Renders the admin form for creating a company, including its workplace arrangement.
+ */
 export default function NewCompanyPage() {
 
     const programmingLanguages = [

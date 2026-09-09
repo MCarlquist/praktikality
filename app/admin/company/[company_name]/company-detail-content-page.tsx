@@ -11,6 +11,11 @@ type User = {
     email: string
 }
 
+/**
+ * Displays company details and allows updating the company's internship readiness status.
+ *
+ * @param companyName - The name of the company to display
+ */
 export default function CompanyDetailContent({ companyName }: { companyName: string }) {
 
     const [loading, setLoading] = useState(true);

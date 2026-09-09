@@ -17,6 +17,12 @@ export async function GET() {
     }
 }
 
+/**
+ * Updates a user's internship preference.
+ *
+ * @param req - Request containing `updatedUser.id` and `updatedUser.want_internship`
+ * @returns A success response when the user is updated, or a 500 error response if the update fails
+ */
 export async function PUT(req: NextRequest) {
     const body = await req.json();
     

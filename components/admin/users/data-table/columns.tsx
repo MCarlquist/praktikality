@@ -25,6 +25,12 @@ export type UserTableData = {
     email: string,
 }
 
+/**
+ * Provides controls for viewing, editing, and deleting a user.
+ *
+ * @param row - The table row containing the user data.
+ * @param onUpdate - Optional callback invoked after a successful update or deletion.
+ */
 function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
     const [open, setOpen] = useState(false);
     const [wantInternship, setWantInternship] = useState<boolean>(row.original.want_internship ?? false);

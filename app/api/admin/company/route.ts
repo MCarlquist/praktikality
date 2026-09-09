@@ -6,6 +6,11 @@ import type { NextRequest } from 'next/server';
 
 
 
+/**
+ * Retrieves companies, optionally filtered by a case-insensitive partial name search.
+ *
+ * @returns A response containing matching companies or an error message.
+ */
 export async function GET(request: NextRequest) {
     const supabase = await createServerSupabaseClient();
     try {

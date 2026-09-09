@@ -33,15 +33,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: Request) {
 
-    const supabase = await createServerSupabaseClient();
 
     try {
         const supabase = await createServerSupabaseClient();
-        const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location, company_site, company_speciality } = await request.json();
+        const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, location, company_site, company_speciality, work_location } = await request.json();
 
         const { data, error } = await supabase
             .from('companies')
-            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, remote, location, company_site, company_speciality }])
+            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, work_location, location, company_site, company_speciality }])
             .select()
             .single();
 

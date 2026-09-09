@@ -19,9 +19,7 @@ export async function GET() {
 
 export async function PUT(req: NextRequest) {
     const body = await req.json();
-    console.log('updated body', body.updatedUser);
     
-
     try {
         const supabase = await createServerSupabaseClient();
 

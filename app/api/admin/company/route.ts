@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ companies });
         }
 
-        let { data: companies, error } = await supabase.from('companies').select('*');
+        let { data: companies, error } = await supabase.from('companies').select('*').eq('ready_for_intern', true);
 
         return NextResponse.json({ companies });
     } catch (error) {

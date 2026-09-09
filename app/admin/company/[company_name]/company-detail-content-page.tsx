@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { Switch } from "@/components/ui/switch";
+import { createClient } from "@/lib/supabase/client";
 
 type User = {
     id: string,
@@ -23,6 +25,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [contact, setContact] = useState('');
     const [website, setWebsite] = useState('');
     const [users, setUsers] = useState<User[]>([]);
+    const [ready, setReady] = useState<boolean>(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,9 +41,10 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setLocation(result.company.location);
                 setContact(result.company.company_contact);
                 setWebsite(result.company.company_site);
+                setReady(result.company.ready_for_intern)
 
                 // Creating sample Array of users at company
-                const userTestDataArray: User[] = [{id: 'efcid83', email: 'user1@codex.com'}, {id: 'fdak382', email: 'user2@codex.com'}];
+                const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
                 setUsers(userTestDataArray);
             } catch (err) {
                 setError(err instanceof Error ? err.message : "Error fetching data");
@@ -57,9 +61,39 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     if (loading) return <div className="flex flex-col"><Spinner className="size-8" /> Loading Company...</div>;
     if (error) return <div>Error: {error}</div>;
 
+    const setReadyIntern = async (condition: boolean) => {
+        const supabase = createClient();
+
+        const { data, error } = await supabase
+            .from('companies')
+            .update({ ready_for_intern: condition })
+            .eq('company_name', companyName)
+            .select();
+        if (error) {
+            setError(error.message);
+            return;
+        }
+
+        if (data?.[0]) {
+            setReady(data[0].ready_for_intern);
+        }
+        
+
+    }
+
     return (
         <div className="mx-auto">
             <p className="text-5xl mb-3">{name}</p>
+            <p>Aktuellt för praktik?</p>
+            {<div className="flex items-center space-x-2">
+                {ready ? '' : <p className="text-red-500">No</p>}
+                <Switch
+                    id="user-wants-internship"
+                    checked={ready}
+                    onCheckedChange={setReadyIntern}
+                />
+                {ready ? <p className="text-green-500">Yes</p> : ''}
+            </div>}
             <p>Company Type: {type}</p>
             <p>Company Size: {size} people</p>
             <p>Do they already have an intern? Yes <Checkbox checked={haveIntern === 'yes' ? true : false} /> No <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
@@ -78,7 +112,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 <p>Current Deltagare:</p>
                 <small>{
                     users.map(((user) =>
-                        <p key={user.id}>{user.email}</p> 
+                        <p key={user.id}>{user.email}</p>
                     ))}</small>
             </div>
         </div>

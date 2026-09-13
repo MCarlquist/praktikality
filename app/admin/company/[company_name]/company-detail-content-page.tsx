@@ -45,8 +45,8 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                         .from("company-logos")
                         .createSignedUrl(result.company.logo_path, 60 * 60);
 
-                    if (imageError) {
-                        throw new Error(`Unable to load company logo: ${imageError.message}`);
+                    if (imageError || !imageData) {
+                        throw new Error(`Unable to load company logo: ${imageError?.message ?? "No image data returned"}`);
                     }
 
                     setImage(imageData.signedUrl);

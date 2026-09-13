@@ -5,6 +5,7 @@ import { SquareMousePointer } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { createClient } from "@/lib/supabase/client";
+import Image from "next/image";
 
 type User = {
     id: string,
@@ -26,12 +27,31 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [website, setWebsite] = useState('');
     const [users, setUsers] = useState<User[]>([]);
     const [ready, setReady] = useState<boolean>(false);
+    const [image, setImage] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
                 const result = await response.json();
+                if (!response.ok || !result.company) {
+                    throw new Error(result.error ?? "Company not found");
+                }
+
+                const supabase = createClient();
+                if (result.company.logo_path) {
+                    const { data: imageData, error: imageError } = await supabase
+                        .storage
+                        .from("company-logos")
+                        .createSignedUrl(result.company.logo_path, 60 * 60);
+
+                    if (imageError) {
+                        throw new Error(`Unable to load company logo: ${imageError.message}`);
+                    }
+
+                    setImage(imageData.signedUrl);
+                }
+
                 setName(result.company.company_name);
                 setType(result.company.company_type);
                 setSize(result.company.company_size);
@@ -77,12 +97,13 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         if (data?.[0]) {
             setReady(data[0].ready_for_intern);
         }
-        
+
 
     }
 
     return (
         <div className="mx-auto">
+            {image && <Image src={image} alt={`${name} logo`} width={500} height={500} />}
             <p className="text-5xl mb-3">{name}</p>
             <p>Aktuellt för praktik?</p>
             {<div className="flex items-center space-x-2">

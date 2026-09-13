@@ -58,6 +58,9 @@ export function SignUpForm({
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/directory`,
+          data: {
+            name,
+          },
         },
       });
 
@@ -77,7 +80,7 @@ export function SignUpForm({
 
 
 
-      //router.push("/auth/sign-up-success");
+      router.push("/auth/sign-up-success");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Sorry , something went wrong");
     } finally {

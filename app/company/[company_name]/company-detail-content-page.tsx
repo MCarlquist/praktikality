@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import LanguagesBadges from "@/components/company/languages_badges";
 import { createClient } from "@/lib/supabase/client";
 import Markdown from 'react-markdown';
+import Image from "next/image";
 
 //! Calls supabase browser client.
 const supabase = createClient();
@@ -41,6 +42,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [generatingAI, setGeneratingAI] = useState(false);
     const [speciality, setSpeciality] = useState('');
     const [worklocation, setWorkLocation] = useState('');
+    const [image, setImage] = useState<string | null>(null);
 
 
     // fetch signed up users to company.
@@ -206,6 +208,20 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 let work_location = result.company.work_location;
                 setWorkLocation(setWOrkLocationFn(work_location));
 
+                const supabase = createClient();
+                if (result.company.logo_path) {
+                    const { data: imageData, error: imageError } = await supabase
+                        .storage
+                        .from("company-logos")
+                        .createSignedUrl(result.company.logo_path, 60 * 60);
+
+                    if (imageError) {
+                        throw new Error(`Unable to load company logo: ${imageError.message}`);
+                    }
+
+                    setImage(imageData.signedUrl);
+                }
+
                 // TODO: fetch signed up users to company from database.
                 const fetchUsers = await fetchSignedUpUsersToCompany();
                 setSignedUpUsers(fetchUsers)
@@ -297,6 +313,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
         <div>
             <div className="mx-auto flex flex-auto gap-5">
                 <div>
+                    {image && <Image src={image} alt={`${name} logo`} width={500} height={500} />}
                     <p className="text-5xl mb-3">{name}</p>
                     <p>Company Type: <span className="font-bold"> {type}</span></p>
                     <p>Company Size: <span className="font-bold">{size}</span> people</p>

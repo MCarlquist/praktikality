@@ -36,15 +36,57 @@ export async function POST(request: Request) {
 
     try {
         const supabase = await createServerSupabaseClient();
-        const { company_name, company_contact, company_type, company_size, have_intern, programming_languages, location, company_site, company_speciality, work_location } = await request.json();
+
+        const formData = await request.formData();
+
+        const company_name = formData.get('company_name') as string;
+        const company_contact = formData.get("company_contact") as string;
+        const company_type = formData.get("company_type") as string;
+        const company_size = formData.get("company_size") as string;
+        const have_intern = formData.get("have_intern") === "yes";
+        const programming_languages = JSON.parse(formData.get("programming_languages") as string);
+        const location = formData.get("location") as string;
+        const company_site = formData.get("company_site") as string;
+        const company_speciality = formData.get("company_speciality") as string;
+        const work_location = formData.get("work_location") as string;
+
+        // Upload logo
+        const logo_file = formData.get('logo') as File | null;
+        let logoPath: string | null = null;
+
+        if (logo_file && logo_file.size > 0) {
+            const fileExtension = logo_file.name.split('.').pop();
+            const fileName = `${crypto.randomUUID()}.${fileExtension}`;
+            logoPath = `companies/${fileName}`
+
+            const { error: uploadError } = await supabase.storage
+                .from('company-logos')
+                .upload(logoPath, logo_file, {
+                    contentType: logo_file.type,
+                    upsert: false
+                });
+
+            if (uploadError) {
+                console.error("Upload error ", uploadError);
+
+                return NextResponse.json(
+                    { error: 'Failed to upload company logo' },
+                    { status: 400 },
+                );
+            }
+        }
+
 
         const { data, error } = await supabase
             .from('companies')
-            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, work_location, location, company_site, company_speciality }])
+            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, work_location, location, company_site, company_speciality, logo_path: logoPath }])
             .select()
             .single();
 
         if (error) {
+            if(logoPath) {
+                await supabase.storage.from('company-logos').remove([logoPath]);
+            }
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
 
@@ -103,7 +145,7 @@ export async function PUT(request: Request) {
         if (error) {
             return NextResponse.json({ error: error.message }, { status: 400 });
         }
-            return NextResponse.json({ success: true, data }, { status: 200 });
+        return NextResponse.json({ success: true, data }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: 'Failed to add user to company' }, { status: 500 });
     }

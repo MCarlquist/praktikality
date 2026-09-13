@@ -5,9 +5,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ToastContainer, toast } from 'react-toastify';
+import {
+    Field,
+    FieldLabel,
+} from "@/components/ui/field"
 
 import {
     RadioGroup,
@@ -18,7 +21,6 @@ import {
     SelectContent,
     SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
@@ -38,6 +40,7 @@ type InputFormValues = {
     location: string;
     company_site: string;
     company_speciality: string;
+    logo?: FileList;
 };
 
 
@@ -71,7 +74,7 @@ export default function NewCompanyPage() {
         { value: 'github', label: 'GitHub' },
     ];
 
-    const { control, handleSubmit, register, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm<InputFormValues>({
         defaultValues: {
             company_name: "",
             company_contact: "",
@@ -83,6 +86,7 @@ export default function NewCompanyPage() {
             location: "",
             company_site: "",
             company_speciality: "",
+            logo: undefined
         },
     });
 
@@ -104,35 +108,54 @@ export default function NewCompanyPage() {
 
 
     const handleSubmits: SubmitHandler<InputFormValues> = async (data) => {
+        console.log(data);
+
         setLoading(true);
         try {
+            const formData = new FormData();
+            formData.append('company_name', data.company_name);
+            formData.append('company_contact', data.company_contact);
+            formData.append('company_type', data.company_type);
+            formData.append('company_size', data.company_size);
+            formData.append("have_intern", data.have_intern);
+            formData.append("programming_languages", JSON.stringify(data.programming_languages));
+            formData.append("work_location", data.work_location);
+            formData.append("location", data.location);
+            formData.append("company_site", data.company_site);
+            formData.append("company_speciality", data.company_speciality);
+
+            // Upload Logo
+            if(data.logo?.[0]) {
+                formData.append('logo', data.logo[0]);
+            }
+
             const response = await fetch('/api/admin/company', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
+                body: formData
             });
             if (response.ok) {
-                const data = await response.json();
-                toast.success(`Company ${data.data.company_name} created successfully.`, {
+                const responseData = await response.json();
+                toast.success(`Company ${responseData.data.company_name} created successfully`, {
                     position: 'top-center',
                     autoClose: 3500,
-                    theme: 'dark',
-
                 });
+
                 setTimeout(() => {
                     router.push('/admin/company');
                 }, 3500);
             } else {
                 const errorData = await response.json();
-                toast.error("Failed to create company: " + errorData.error, {
+                toast.error("Failed to create company:" + errorData.error, {
                     position: 'top-center',
-                    autoClose: 3500,
-                    theme: 'dark',
+                    autoClose: 3500
                 });
-
             }
-
         } catch (error) {
+            console.error(error);
+            toast.error('Something went wrong', {
+                position: 'top-center',
+                autoClose: 3500
+            });
         } finally {
             setLoading(false);
         }
@@ -167,7 +190,7 @@ export default function NewCompanyPage() {
                     name="company_speciality"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field}) => (
+                    render={({ field }) => (
                         <Select value={field.value} onValueChange={field.onChange}>
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Select speciality" />
@@ -183,7 +206,7 @@ export default function NewCompanyPage() {
                             </SelectContent>
                         </Select>
                     )}
-                    />
+                />
 
                 {errors.company_speciality && <span className="text-red-500 text-sm">This field is required</span>}
 
@@ -285,14 +308,40 @@ export default function NewCompanyPage() {
 
 
                 {/* location */}
-                <Controller
-                    name="location"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => <Input {...field} placeholder="Location" className="w-full px-3 py-2 border rounded" />}
-                />
+                <Field>
+                    <p>Fysisk location</p>
+                    <Controller
+                        name="location"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => <Input {...field} id="location" placeholder="Location" className="w-full px-3 py-2 border rounded" />}
+                    />
+                </Field>
+
                 {errors.location && <span className="text-red-500 text-sm">This field is required</span>}
                 <br />
+                <Field>
+                    <FieldLabel htmlFor="logo">Logo</FieldLabel>
+                    <Controller
+                        name="logo"
+                        control={control}
+                        rules={{ required: true }}
+                        render={({ field }) => (
+                            <Input
+                                name={field.name}
+                                onBlur={field.onBlur}
+                                ref={field.ref}
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp"
+                                onChange={(event) => {
+                                    field.onChange(event.target.files);
+                                }}
+                                className="w-full px-3 py-2 border rounded"
+                            />
+                        )}
+                    />
+                    {errors.logo && <span className="text-red-500 text-sm">This field is required</span>}
+                </Field>
                 <Button type="submit" disabled={loading} variant={'default'}>
                     {loading ? <>Creating... <Spinner /></> : 'Create Company'}
                 </Button>

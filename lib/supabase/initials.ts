@@ -8,6 +8,9 @@ export async function getInitials(userId: string): Promise<string> {
         .select("initials")
         .eq("id", userId)
         .single();
-        
-        return profile?.initials;
+        if (error) {
+            return "??";
+        }
+
+        return profile?.initials ?? "??";
 }

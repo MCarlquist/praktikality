@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { LogoutButton } from "./logout-button";
 import { isAdmin } from "@/lib/supabase/admin";
+import { getInitials } from "@/lib/supabase/initials";
 
 /**
  * Render authentication UI based on the current user's presence and admin role.
@@ -16,13 +17,13 @@ export async function AuthButton() {
   const { data } = await supabase.auth.getClaims();
 
   const user = data?.claims;
-
+  
   // check if Admin
   const admin = await isAdmin(user?.sub!);
-  
+  const initials = await getInitials(user?.sub!);
   return user ? (
     <div className="flex items-center gap-4">
-      Hey, { user.email }
+      Hey, { initials }
       { admin && (
         <Button asChild size="sm" variant={"outline"}>
           <Link href="/admin">Admin</Link>

@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         const company_contact = formData.get("company_contact") as string;
         const company_type = formData.get("company_type") as string;
         const company_size = formData.get("company_size") as string;
-        const have_intern = formData.get("have_intern") === "yes";
+        const have_intern = formData.get("have_intern");
         const programming_languages = JSON.parse(formData.get("programming_languages") as string);
         const location = formData.get("location") as string;
         const company_site = formData.get("company_site") as string;
@@ -131,7 +131,6 @@ export async function PUT(request: Request) {
 
     try {
         const { company_name, userBody } = await request.json();
-        console.log('company_name', company_name, 'userBody', userBody);
         const deltagareArray = [
             { name: userBody.name, email: userBody.email }
         ];

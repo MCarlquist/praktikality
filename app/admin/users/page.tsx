@@ -28,7 +28,6 @@ export default function CompanyAdminPage() {
             const data = await response.json();
             setUsers(data.users ?? []);
             if (process.env.NODE_ENV !== 'production') {
-                console.log('fetched users', data.users);
             }
         } catch (error) {
             console.error('Error fetching users:', error);

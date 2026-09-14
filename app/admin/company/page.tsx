@@ -25,7 +25,6 @@ export default function CompanyAdminPage() {
                 const data = await response.json();
                 setCompanies(data.companies ?? []);
                 if (process.env.NODE_ENV !== 'production') {
-                    console.log('fetched companies', data.companies);
                 }
             } catch (error) {
                 console.error('Error fetching companies:', error);

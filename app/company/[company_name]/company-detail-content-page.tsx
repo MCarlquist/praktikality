@@ -194,6 +194,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
                 const result = await response.json();
+                
                 setName(result.company.company_name);
                 setType(setTypeFn(result.company.company_type));
                 setSize(result.company.company_size);

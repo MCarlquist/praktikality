@@ -108,8 +108,6 @@ export default function NewCompanyPage() {
 
 
     const handleSubmits: SubmitHandler<InputFormValues> = async (data) => {
-        console.log(data);
-
         setLoading(true);
         try {
             const formData = new FormData();

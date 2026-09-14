@@ -34,7 +34,6 @@ export async function PUT(req: NextRequest) {
         if (error) {
             throw new Error(error.message);
         }
-        console.log('data', data);
         
         return NextResponse.json({ message: 'User updated successfully', success: true });
     } catch (error) {
@@ -45,10 +44,8 @@ export async function PUT(req: NextRequest) {
 
 
 export async function DELETE(req: NextRequest) {
-    console.log('deleting user');
 
     const fromServer = req.nextUrl.searchParams.get('user');
-    console.log(fromServer);
 
     try {
         const supabase = await createServerSupabaseClient();

@@ -63,24 +63,12 @@ export function SignUpForm({
           },
         },
       });
-
-      if (error) throw error;
       
-
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .insert([
-          { id: data.user?.id, role: 'user', email },
-        ])
-        .select();
-
-      if (profileError) {
-        setError(profileError.message);
-      }
+      if (error) throw error;
 
 
 
-      router.push("/auth/sign-up-success");
+    router.push("/auth/sign-up-success");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "Sorry , something went wrong");
     } finally {

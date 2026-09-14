@@ -1,6 +1,4 @@
 import { createClient } from "./client";
-import { Database } from "../../database.types";
-import { NextRequest, NextResponse } from "next/server";
 
 const supabase = createClient();
 

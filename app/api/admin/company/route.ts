@@ -49,6 +49,7 @@ export async function POST(request: Request) {
         const company_site = formData.get("company_site") as string;
         const company_speciality = formData.get("company_speciality") as string;
         const work_location = formData.get("work_location") as string;
+        const description = formData.get('description') as string;
 
         // Upload logo
         const logo_file = formData.get('logo') as File | null;
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
 
         const { data, error } = await supabase
             .from('companies')
-            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, work_location, location, company_site, company_speciality, logo_path: logoPath }])
+            .insert([{ company_name, company_contact, company_type, company_size, have_intern, programming_languages, work_location, location, company_site, company_speciality, logo_path: logoPath, description }])
             .select()
             .single();
 

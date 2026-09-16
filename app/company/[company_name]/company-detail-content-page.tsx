@@ -44,6 +44,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     const [speciality, setSpeciality] = useState('');
     const [worklocation, setWorkLocation] = useState('');
     const [image, setImage] = useState<string | null>(null);
+    const [description, setDescription] = useState('');
 
 
     // fetch signed up users to company.
@@ -195,6 +196,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             try {
                 const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
                 const result = await response.json();
+                console.log(result);
                 
                 setName(result.company.company_name);
                 setType(setTypeFn(result.company.company_type));
@@ -209,6 +211,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setSpeciality(setSpecialityFn(speciality))
                 let work_location = result.company.work_location;
                 setWorkLocation(setWOrkLocationFn(work_location));
+                setDescription(result.company.description);
 
                 const supabase = createClient();
                 console.log("Logo path from database:", result.company.logo_path);
@@ -324,12 +327,13 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     <p>Do they already have an intern? <span className={haveIntern === 'yes' ? 'font-bold' : ''}>Yes</span><Checkbox checked={haveIntern === 'yes' ? true : false} /> <span className={haveIntern === 'no' ? 'font-bold' : ''}>No</span> <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
 
                     <LanguagesBadges languages={programmingLanguages} />
-                    <p>Företags Inriktning: {speciality}</p>
+                    <p>Företags Inriktning: <span className="font-bold">{speciality}</span></p>
                     <p>Arbetsplats: <span className="font-bold">{worklocation}</span> </p>
                     <p>Location: <span className="font-bold">{location}</span></p>
                     <p>Contact: <a className="text-blue-400 font-bold" href={`mailto:${contact}`}>{contact}</a></p>
                     <p>Company website: {website != null ? <a className="flex gap-1 font-bold" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
-
+                    <p>Beskrivning:</p>
+                    <p className="font-bold">{description}</p>
                     <div className="mt-4">
                         <p>Antal Deltagare redan med denna företag: <span className="font-bold"> {signedUpUsers}</span></p>
 

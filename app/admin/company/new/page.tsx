@@ -27,6 +27,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 
 
 type InputFormValues = {
@@ -41,6 +42,7 @@ type InputFormValues = {
     company_site: string;
     company_speciality: string;
     logo?: FileList;
+    description: string;
 };
 
 
@@ -86,7 +88,8 @@ export default function NewCompanyPage() {
             location: "",
             company_site: "",
             company_speciality: "",
-            logo: undefined
+            logo: undefined,
+            description: ''
         },
     });
 
@@ -121,6 +124,7 @@ export default function NewCompanyPage() {
             formData.append("location", data.location);
             formData.append("company_site", data.company_site);
             formData.append("company_speciality", data.company_speciality);
+            formData.append('description', data.description);
 
             // Upload Logo
             if(data.logo?.[0]) {
@@ -216,6 +220,14 @@ export default function NewCompanyPage() {
                 />
 
                 {errors.company_contact && <span className="text-red-500 text-sm">This field is required</span>}
+                <Controller
+                    name="description"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field }) => <Textarea {...field} placeholder="Företags beskrivning" />}
+                />
+
+                {errors.description && <span className="text-red-500 text-sm">This field is required</span>}
 
                 {/* multiple select of company size */}
                 <p>Company Size (number of people)</p>

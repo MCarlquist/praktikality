@@ -211,15 +211,17 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setWorkLocation(setWOrkLocationFn(work_location));
 
                 const supabase = createClient();
+                console.log("Logo path from database:", result.company.logo_path);
                 if (result.company.logo_path) {
                     const { data: imageData, error: imageError } = await supabase
                         .storage
                         .from("company-logos")
                         .createSignedUrl(result.company.logo_path, 60 * 60);
-
+                        
                     if (imageError) {
                         throw new Error(`Unable to load company logo: ${imageError.message}`);
                     }
+                    
 
                     setImage(imageData.signedUrl);
                 }

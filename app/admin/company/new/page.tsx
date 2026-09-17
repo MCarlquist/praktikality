@@ -74,6 +74,16 @@ export default function NewCompanyPage() {
         { value: "go", label: "Go" },
         { value: "rust", label: "Rust" },
         { value: 'github', label: 'GitHub' },
+        {value: 'html' , label: 'HTML' },
+        {value: 'css', label: 'CSS' },
+        {value: 'c', label: 'C' },
+        {value: 'nodejs', label: 'Node.js' },
+        {value: 'php', label: 'PHP' },
+        {value: 'aws', label: 'AWS' },
+        {value: 'fairgate', label: 'Fairgate' },
+        {value: 'mysql', label: 'MySQL' },
+        {value: 'docker', label: 'Docker' },
+        {value: 'microservices', label: 'Microservices' },
     ];
 
     const { control, handleSubmit, formState: { errors } } = useForm<InputFormValues>({

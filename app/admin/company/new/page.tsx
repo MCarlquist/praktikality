@@ -84,6 +84,20 @@ export default function NewCompanyPage() {
         {value: 'mysql', label: 'MySQL' },
         {value: 'docker', label: 'Docker' },
         {value: 'microservices', label: 'Microservices' },
+        {value: 'jsx', label: 'JSX' },
+        {value: 'wordpress', label: 'Wordpress' },
+        {value: 'jquery', label: 'Jquery' },
+        {value: 'raspberry_pi', label: 'Raspberry Pi' },
+        {value: 'arduino', label: 'Arduino' },
+        {value: 'jetpack_compose', label: 'JetPack Compose' },
+        {value: 'ui_kit', label: 'UI Kit' },
+        {value: 'xcode', label: 'Xcode' },
+        {value: 'objective_c', label: 'Objective C' },
+        {value: 'mongodb', label: 'MongoDB' },
+        {value: 'command_line', label: 'Command Line' },
+        {value: 'liquid', label: 'liquid' },
+        {value: 'graphql', label: 'GraphQl' },
+        {value: 'shoppify_cli', label: 'Shoppify CLI' },
     ];
 
     const { control, handleSubmit, formState: { errors } } = useForm<InputFormValues>({

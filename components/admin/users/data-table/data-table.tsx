@@ -21,16 +21,19 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onUpdate?: () => void
+  onNotify?: (type: "success" | "error", message: string) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   onUpdate,
+  onNotify,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns: columns,
+    meta: { onUpdate, onNotify },
     getCoreRowModel: getCoreRowModel(),
   })
 
@@ -63,7 +66,7 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, { ...cell.getContext(), onUpdate })}
+                    {flexRender(cell.column.columnDef.cell, { ...cell.getContext(), onUpdate, onNotify })}
                   </TableCell>
                 ))}
               </TableRow>

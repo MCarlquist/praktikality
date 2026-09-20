@@ -17,9 +17,8 @@ export async function GET() {
     }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
     const body = await req.json();
-    
     try {
         const supabase = await createServerSupabaseClient();
 
@@ -28,14 +27,17 @@ export async function PUT(req: NextRequest) {
             .update({
                 want_internship: body.updatedUser.want_internship,
             })
-            .eq('id', body.updatedUser.id)
+            .eq('id', body.id)
             .select();
+
+            console.log(data);
+            
 
         if (error) {
             throw new Error(error.message);
         }
         
-        return NextResponse.json({ message: 'User updated successfully', success: true });
+        return NextResponse.json({ message: 'User updated successfully', success: true, user: data });
     } catch (error) {
         console.log('error', error);
         return NextResponse.json({ error: 'Failed to update user', success: false }, { status: 500 });

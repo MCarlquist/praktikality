@@ -68,12 +68,10 @@ export const columns: ColumnDef<CompanyTableData>[] = [
       // Add user to commapny table.
       const addUserSubmit = async (e: { preventDefault: () => void; }) => {
 
-        const name = (document.getElementById('deltagare-name') as HTMLInputElement)?.value;
-        const email = (document.getElementById('deltagare-email') as HTMLInputElement)?.value;
+        const initials = (document.getElementById('deltagare-initials') as HTMLInputElement)?.value;
 
         const userBody = {
-          name,
-          email
+          initials,
         };
         e.preventDefault();
         const submit = fetch('/api/admin/company', {
@@ -93,7 +91,7 @@ export const columns: ColumnDef<CompanyTableData>[] = [
 
         // toast notification
         if (response.success) {
-          toast.success(`Deltagare ${name} tillagd för ${company_name}`);
+          toast.success(`Deltagare ${initials} tillagd för ${company_name}`);
         } else {
           toast.error('Något gick fel, försök igen.');
         }
@@ -133,12 +131,8 @@ export const columns: ColumnDef<CompanyTableData>[] = [
               </DialogHeader>
               <form onSubmit={addUserSubmit} className="flex gap-4 flex-col">
                 <div className="grid gap-4">
-                  <Label htmlFor="deltagare-name">Namn</Label>
-                  <Input type="text" placeholder="Namn" id="deltagare-name" />
-                </div>
-                <div className="grid gap-4">
-                  <Label htmlFor="deltagare-email">E-mail</Label>
-                  <Input type="email" placeholder="Email" id="deltagare-email" />
+                  <Label htmlFor="deltagare-name">Deltagare Initialer</Label>
+                  <Input type="text" placeholder="Initialer ex. MC101" id="deltagare-initials" />
                 </div>
                 <DialogFooter>
                   <Button type="button" variant="destructive" onClick={() => setOpen(false)}>No</Button>

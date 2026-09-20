@@ -98,6 +98,77 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Failed to create company' }, { status: 500 });
     }
 }
+export async function PATCH(request: Request) {
+    try {
+        const supabase = await createServerSupabaseClient();
+        const formData = await request.formData();
+        const originalCompanyName = formData.get("original_company_name") as string;
+        const company_name = formData.get("company_name") as string;
+
+        if (!originalCompanyName || !company_name) {
+            return NextResponse.json({ error: "Company name is required" }, { status: 400 });
+        }
+
+        const updateData: Record<string, unknown> = {
+            company_name,
+            company_contact: formData.get("company_contact"),
+            company_type: formData.get("company_type"),
+            company_size: formData.get("company_size"),
+            have_intern: formData.get("have_intern"),
+            programming_languages: JSON.parse(formData.get("programming_languages") as string),
+            work_location: formData.get("work_location"),
+            location: formData.get("location"),
+            company_site: formData.get("company_site"),
+            company_speciality: formData.get("company_speciality"),
+            description: formData.get("description"),
+        };
+
+        const logoFile = formData.get("logo") as File | null;
+        let uploadedLogoPath: string | null = null;
+        if (logoFile && logoFile.size > 0) {
+            const fileExtension = logoFile.name.split(".").pop();
+            uploadedLogoPath = `companies/${crypto.randomUUID()}.${fileExtension}`;
+            const { error: uploadError } = await supabase.storage
+                .from("company-logos")
+                .upload(uploadedLogoPath, logoFile, { contentType: logoFile.type, upsert: false });
+
+            if (uploadError) {
+                return NextResponse.json({ error: "Failed to upload company logo" }, { status: 400 });
+            }
+            updateData.logo_path = uploadedLogoPath;
+        }
+
+        const { data: existingCompany, error: existingCompanyError } = await supabase
+            .from("companies")
+            .select("logo_path")
+            .eq("company_name", originalCompanyName)
+            .single();
+        if (existingCompanyError) {
+            if (uploadedLogoPath) await supabase.storage.from("company-logos").remove([uploadedLogoPath]);
+            return NextResponse.json({ error: existingCompanyError.message }, { status: 404 });
+        }
+
+        const { data, error } = await supabase
+            .from("companies")
+            .update(updateData)
+            .eq("company_name", originalCompanyName)
+            .select()
+            .single();
+
+        if (error) {
+            if (uploadedLogoPath) await supabase.storage.from("company-logos").remove([uploadedLogoPath]);
+            return NextResponse.json({ error: error.message }, { status: 400 });
+        }
+
+        if (uploadedLogoPath && existingCompany.logo_path) {
+            await supabase.storage.from("company-logos").remove([existingCompany.logo_path]);
+        }
+        return NextResponse.json({ data }, { status: 200 });
+    } catch (error) {
+        console.log("error", error);
+        return NextResponse.json({ error: "Failed to update company" }, { status: 500 });
+    }
+}
 
 export async function DELETE(request: Request) {
     const supabase = await createServerSupabaseClient();

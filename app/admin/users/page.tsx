@@ -1,6 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/admin/users/data-table/data-table";
+import { Toaster } from "@/components/ui/sonner";
 import EmptyArea from "@/components/admin/empty-area";
 import { Suspense, useState, useEffect } from "react";
 import { Spinner } from "@/components/ui/spinner"
@@ -8,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { userColumns } from "@/components/admin/users/data-table/columns";
+import { toast } from "sonner";
 
 
 export default function CompanyAdminPage() {
@@ -39,6 +41,7 @@ export default function CompanyAdminPage() {
 
     return (
         <>
+            <Toaster position="top-center" />
             <h1 className="text-2xl font-bold text-center">Users</h1>
             <div className="flex flex-col items-center justify-center">
                 <p>Here you can manage users of Praktikality.</p>
@@ -60,7 +63,12 @@ export default function CompanyAdminPage() {
                 <div> <Spinner className="size-7 mx-auto" /></div>
             ) : users.length > 0 ? (
                 <Suspense fallback={<div>Loading...</div>}>
-                    <DataTable data={users} columns={userColumns} onUpdate={fetchUsers} />
+                    <DataTable
+                        data={users}
+                        columns={userColumns}
+                        onUpdate={fetchUsers}
+                        onNotify={(type, message) => toast[type](message)}
+                    />
 
 
 

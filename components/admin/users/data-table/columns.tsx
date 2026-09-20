@@ -17,18 +17,27 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "react-toastify";
-import { Toaster } from "@/components/ui/sonner";
-
 
 export type UserTableData = {
-    email: string,
+    initials: string,
+    want_internship: boolean
 }
 
-function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
+type UserTableMeta = {
+    onUpdate?: () => void;
+    onNotify?: (type: "success" | "error", message: string) => void;
+}
+
+function ActionsCell({ row, onUpdate, onNotify }: {
+    row: any;
+    onUpdate?: () => void;
+    onNotify?: (type: "success" | "error", message: string) => void;
+}) {
     const [open, setOpen] = useState(false);
     const [wantInternship, setWantInternship] = useState<boolean>(row.original.want_internship ?? false);
-    const { email, companies_they_work_at } = row.original;
+    const { initials, companies_they_work_at } = row.original;
+    console.log(row.original);
+    
 
     // convert companies_they_work_at (array of JSON strings) into an array of objects
     const companies = (companies_they_work_at || []).map((item: string) => {
@@ -48,9 +57,9 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
             id: row.original.id,
             want_internship: wantInternship,
         };
-        
+
         const response = await (await fetch('/api/admin/users', {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -62,14 +71,13 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
 
         // toast notification
         if (response.success) {
-          toast.success(`successfully updated ${email}`);
-          row.original.want_internship = wantInternship;
-          onUpdate?.();
+            row.original.want_internship = wantInternship;
+            onUpdate?.();
+            onNotify?.("success", `Successfully updated ${initials}`);
+            setOpen(false);
         } else {
-          toast.error('Något gick fel, försök igen.');
+            onNotify?.("error", 'Något gick fel, försök igen.');
         }
-
-        setOpen(false);
     }
 
 
@@ -90,7 +98,6 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
     return (
         <>
             <DropdownMenu>
-                <Toaster position="top-right" />
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="h-8 w-8 p-0">
                         <span className="sr-only">Open menu</span>
@@ -112,28 +119,28 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
                     <DialogHeader>
                         <DialogTitle>Edit User</DialogTitle>
                         <DialogDescription>
-                            Make changes to {email}
+                            Make changes to {initials}
                         </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleEditUser}>
                         <FieldGroup>
                             <Field>
-                                <FieldLabel>Are they ready for internship?</FieldLabel>
+                                <FieldLabel>Redo för praktik?</FieldLabel>
                                 <div className="flex items-center space-x-2">
-                                    {wantInternship ? '' : <p className="text-red-500">No</p>}
-                                    <Switch 
-                                        id="user-wants-internship" 
+                                    {wantInternship ? '' : <p className="text-red-500">Nej</p>}
+                                    <Switch
+                                        id="user-wants-internship"
                                         checked={wantInternship}
                                         onCheckedChange={setWantInternship}
                                     />
-                                    {wantInternship ? <p className="text-green-500">Yes</p> : ''}
+                                    {wantInternship ? <p className="text-green-500">Ja</p> : ''}
                                 </div>
                             </Field>
                         </FieldGroup>
-                        <FieldGroup>
+                        <FieldGroup className="mt-3">
                             <Field>
-                                <FieldLabel>Companies they work at</FieldLabel>
-                                <div className="flex flex-col gap-1.5 mt-2">
+                                <FieldLabel>Företag dom praktiserar hos</FieldLabel>
+                                <div className="flex flex-col gap-2 mt-2">
                                     {companies.length > 0 ? (
                                         companies.map((company: any, index: number) => (
                                             <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -148,7 +155,7 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
                             </Field>
                         </FieldGroup>
                         <DialogFooter>
-                            <Button variant="destructive" onClick={() => setOpen(false)}>No</Button>
+                            <Button variant="destructive" onClick={() => { setWantInternship(row.original.want_internship); setOpen(false); }} type="reset">No</Button>
                             <Button type="submit">Yes</Button>
                         </DialogFooter>
                     </form>
@@ -160,11 +167,25 @@ function ActionsCell({ row, onUpdate }: { row: any; onUpdate?: () => void }) {
 
 export const userColumns: ColumnDef<UserTableData>[] = [
     {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: "initials",
+        header: "Initialer",
+    },
+    {
+        accessorKey: "want_internship",
+        header: 'Vill ut på praktik?',
+        cell: ({ row }) => {
+            const answer = row.original.want_internship;
+            return answer ? 'Ja' : 'Nej';
+        },
     },
     {
         id: "actions",
-        cell: ({ row }) => <ActionsCell row={row} />,
+        cell: ({ row, table }) => (
+            <ActionsCell
+                row={row}
+                onUpdate={(table.options.meta as UserTableMeta | undefined)?.onUpdate}
+                onNotify={(table.options.meta as UserTableMeta | undefined)?.onNotify}
+            />
+        ),
     },
 ]

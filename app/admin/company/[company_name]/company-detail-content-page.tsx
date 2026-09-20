@@ -1,141 +1,135 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SquareMousePointer } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
-import { createClient } from "@/lib/supabase/client";
-import Image from "next/image";
 
-type User = {
-    id: string,
-    email: string
-}
+import { useEffect, useState } from "react";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+type InputFormValues = {
+    company_name: string;
+    company_contact: string;
+    company_type: string;
+    company_size: string;
+    have_intern: string;
+    programming_languages: string[];
+    work_location: string;
+    location: string;
+    company_site: string;
+    company_speciality: string;
+    logo?: FileList;
+    description: string;
+};
+
+const programmingLanguages = ["React", "Vue.js", "Angular", "Svelte", "Django", "Flask", "Ruby on Rails", "Spring", "Laravel", "Express.js", "ASP.NET", "Flutter", "React Native", "Swift", "Kotlin", "Java", "Python", "JavaScript", "TypeScript", "C#", "C++", "Go", "Rust", "GitHub", "HTML", "CSS", "C", "Node.js", "PHP", "AWS", "Fairgate", "MySQL", "Docker", "Microservices", "JSX", "Wordpress", "Jquery", "Raspberry Pi", "Arduino", "JetPack Compose", "UI Kit", "Xcode", "Objective C", "MongoDB", "Command Line", "liquid", "GraphQl", "Shoppify CLI"].map((label) => ({
+    value: label.toLowerCase().replace(/[^a-z0-9]+/g, "_"),
+    label,
+}));
+
+const specialities = [
+    { label: "E-Handel", value: "ecommerce" },
+    { label: "Konsultbolag", value: "consulting" },
+    { label: "Skola", value: "school" },
+    { label: "SaaS", value: "saas" },
+    { label: "TV Spel", value: "videogame" },
+];
 
 export default function CompanyDetailContent({ companyName }: { companyName: string }) {
-
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [name, setName] = useState('');
-    const [type, setType] = useState('');
-    const [size, setSize] = useState('');
-    const [haveIntern, setHaveIntern] = useState('');
-    const [programmingLanguages, setProgrammingLanguages] = useState([]);
-    const [remote, setRemote] = useState('');
-    const [location, setLocation] = useState('');
-    const [contact, setContact] = useState('');
-    const [website, setWebsite] = useState('');
-    const [users, setUsers] = useState<User[]>([]);
-    const [ready, setReady] = useState<boolean>(false);
-    const [image, setImage] = useState<string | null>(null);
+    const { control, handleSubmit, reset, formState: { errors } } = useForm<InputFormValues>();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCompany = async () => {
             try {
-                const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(String(companyName))}`);
+                const response = await fetch(`/api/admin/single-company?company_name=${encodeURIComponent(companyName)}`);
                 const result = await response.json();
-                if (!response.ok || !result.company) {
-                    throw new Error(result.error ?? "Company not found");
-                }
-
-                const supabase = createClient();
-                if (result.company.logo_path) {
-                    const { data: imageData, error: imageError } = await supabase
-                        .storage
-                        .from("company-logos")
-                        .createSignedUrl(result.company.logo_path, 60 * 60);
-
-                    if (imageError || !imageData) {
-                        throw new Error(`Unable to load company logo: ${imageError?.message ?? "No image data returned"}`);
-                    }
-
-                    setImage(imageData.signedUrl);
-                }
-
-                setName(result.company.company_name);
-                setType(result.company.company_type);
-                setSize(result.company.company_size);
-                setHaveIntern(result.company.have_intern);
-                setProgrammingLanguages(result.company.programming_languages);
-                setRemote(result.company.remote);
-                setLocation(result.company.location);
-                setContact(result.company.company_contact);
-                setWebsite(result.company.company_site);
-                setReady(result.company.ready_for_intern)
-
-                // Creating sample Array of users at company
-                const userTestDataArray: User[] = [{ id: 'efcid83', email: 'user1@codex.com' }, { id: 'fdak382', email: 'user2@codex.com' }];
-                setUsers(userTestDataArray);
-            } catch (err) {
-                setError(err instanceof Error ? err.message : "Error fetching data");
+                if (!response.ok || !result.company) throw new Error(result.error ?? "Company not found");
+                const company = result.company;
+                reset({
+                    company_name: company.company_name ?? "",
+                    company_contact: company.company_contact ?? "",
+                    company_type: company.company_type ?? "",
+                    company_size: company.company_size ?? "",
+                    have_intern: company.have_intern ?? "",
+                    programming_languages: company.programming_languages ?? [],
+                    work_location: company.work_location ?? company.remote ?? "",
+                    location: company.location ?? "",
+                    company_site: company.company_site ?? "",
+                    company_speciality: company.company_speciality ?? "",
+                    description: company.description ?? "",
+                });
+            } catch (fetchError) {
+                setError(fetchError instanceof Error ? fetchError.message : "Error fetching company");
             } finally {
                 setLoading(false);
             }
         };
+        fetchCompany();
+    }, [companyName, reset]);
 
-        if (companyName) {
-            fetchData();
+    const onSubmit: SubmitHandler<InputFormValues> = async (data) => {
+        setSaving(true);
+        try {
+            const formData = new FormData();
+            formData.append("original_company_name", companyName);
+            Object.entries(data).forEach(([key, value]) => {
+                if (key !== "logo") {
+                    formData.append(key, Array.isArray(value) ? JSON.stringify(value) : String(value));
+                }
+            });
+            if (data.logo?.[0]) formData.append("logo", data.logo[0]);
+            const response = await fetch("/api/admin/company", { method: "PATCH", body: formData });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error ?? "Failed to update company");
+            toast.success(`Company ${result.data.company_name} updated successfully`, { position: "top-center", autoClose: 2500 });
+            setTimeout(() => router.push("/admin/company"), 2500);
+        } catch (submitError) {
+            toast.error(submitError instanceof Error ? submitError.message : "Something went wrong", { position: "top-center", autoClose: 3500 });
+        } finally {
+            setSaving(false);
         }
-    }, [companyName]);
+    };
 
-    if (loading) return <div className="flex flex-col"><Spinner className="size-8" /> Loading Company...</div>;
+    if (loading) return <div className="flex items-center gap-2"><Spinner className="size-8" /> Loading Company...</div>;
     if (error) return <div>Error: {error}</div>;
 
-    const setReadyIntern = async (condition: boolean) => {
-        const supabase = createClient();
-
-        const { data, error } = await supabase
-            .from('companies')
-            .update({ ready_for_intern: condition })
-            .eq('company_name', companyName)
-            .select();
-        if (error) {
-            setError(error.message);
-            return;
-        }
-
-        if (data?.[0]) {
-            setReady(data[0].ready_for_intern);
-        }
-
-
-    }
-
     return (
-        <div className="mx-auto">
-            {image && <Image src={image} alt={`${name} logo`} width={500} height={500} />}
-            <p className="text-5xl mb-3">{name}</p>
-            <p>Aktuellt för praktik?</p>
-            {<div className="flex items-center space-x-2">
-                {ready ? '' : <p className="text-red-500">No</p>}
-                <Switch
-                    id="user-wants-internship"
-                    checked={ready}
-                    onCheckedChange={setReadyIntern}
-                />
-                {ready ? <p className="text-green-500">Yes</p> : ''}
-            </div>}
-            <p>Company Type: {type}</p>
-            <p>Company Size: {size} people</p>
-            <p>Do they already have an intern? Yes <Checkbox checked={haveIntern === 'yes' ? true : false} /> No <Checkbox checked={haveIntern === 'no' ? true : false} /></p>
-            <p>Programming Languages:</p>
-            <ul className="text-md">{programmingLanguages.map((lang, index) => (
-                <li key={index}>
-                    <p className="text-sm">-{lang}</p>
-                </li>
-            ))}</ul>
-            <p>Is it remote? Yes <Checkbox checked={remote === 'yes' ? true : false} /> No <Checkbox checked={remote === 'no' ? true : false} /></p>
-            <p>Location: {location}</p>
-            <p>Contact: <a className="text-blue-400" href={`mailto:${contact}`}>{contact}</a></p>
-            <p>Company website: {website != null ? <a className="flex gap-1" href={website} target="_blank">{website} <SquareMousePointer className="size-4" /></a> : 'not supplied'}</p>
-
-            <div className="mt-4">
-                <p>Current Deltagare:</p>
-                <small>{
-                    users.map(((user) =>
-                        <p key={user.id}>{user.email}</p>
-                    ))}</small>
-            </div>
+        <div className="p-6">
+            <ToastContainer />
+            <h1 className="mb-6 text-3xl font-bold">Edit Company</h1>
+            <form onSubmit={handleSubmit(onSubmit)} className="max-w-md space-y-4">
+                <Controller name="company_name" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} placeholder="Company Name" />} />
+                {errors.company_name && <span className="text-sm text-red-500">This field is required</span>}
+                <Controller name="company_site" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} placeholder="Company Site" />} />
+                {errors.company_site && <span className="text-sm text-red-500">This field is required</span>}
+                <Controller name="company_speciality" control={control} rules={{ required: true }} render={({ field }) => <Select value={field.value} onValueChange={field.onChange}><SelectTrigger className="w-full"><SelectValue placeholder="Select speciality" /></SelectTrigger><SelectContent><SelectGroup>{specialities.map((item) => <SelectItem key={item.value} value={item.value}>{item.label}</SelectItem>)}</SelectGroup></SelectContent></Select>} />
+                <Controller name="company_contact" control={control} rules={{ required: true }} render={({ field }) => <Input type="email" {...field} placeholder="Company Contact" />} />
+                <Controller name="description" control={control} rules={{ required: true }} render={({ field }) => <Textarea {...field} placeholder="Företags beskrivning" />} />
+                <p>Company Size (number of people)</p>
+                <Controller name="company_size" control={control} rules={{ required: true }} render={({ field }) => <RadioGroup value={field.value} onValueChange={field.onChange}>{["1-5", "6-20", "21+"].map((value) => <div className="flex items-center gap-3" key={value}><RadioGroupItem value={value} id={`size-${value}`} /><Label htmlFor={`size-${value}`}>{value}</Label></div>)}</RadioGroup>} />
+                <p>Company Type</p>
+                <Controller name="company_type" control={control} rules={{ required: true }} render={({ field }) => <RadioGroup value={field.value} onValueChange={field.onChange}>{[["startup", "Start up"], ["small_business", "Small Business"], ["corporation", "Corporation"]].map(([value, label]) => <div className="flex items-center gap-3" key={value}><RadioGroupItem value={value} id={`type-${value}`} /><Label htmlFor={`type-${value}`}>{label}</Label></div>)}</RadioGroup>} />
+                <p>Already someone at Codex an intern?</p>
+                <Controller name="have_intern" control={control} rules={{ required: true }} render={({ field }) => <RadioGroup value={field.value} onValueChange={field.onChange}>{[["yes", "Yes"], ["no", "No"]].map(([value, label]) => <div className="flex items-center gap-3" key={value}><RadioGroupItem value={value} id={`intern-${value}`} /><Label htmlFor={`intern-${value}`}>{label}</Label></div>)}</RadioGroup>} />
+                <p>Programming Languages used by company</p>
+                <Controller name="programming_languages" control={control} rules={{ required: true }} render={({ field }) => <MultiSelect options={programmingLanguages} onValueChange={field.onChange} defaultValue={field.value} placeholder="Which programming languages do they use?" />} />
+                <p>Work Location</p>
+                <Controller name="work_location" control={control} rules={{ required: true }} render={({ field }) => <RadioGroup value={field.value} onValueChange={field.onChange}>{[["hybrid", "Hybrid"], ["on-site", "På Plats"], ["distans", "På Distans"]].map(([value, label]) => <div className="flex items-center gap-3" key={value}><RadioGroupItem value={value} id={`location-${value}`} /><Label htmlFor={`location-${value}`}>{label}</Label></div>)}</RadioGroup>} />
+                <Controller name="location" control={control} rules={{ required: true }} render={({ field }) => <Input {...field} placeholder="Location" />} />
+                <Label htmlFor="logo">Replace logo (optional)</Label>
+                <Controller name="logo" control={control} render={({ field }) => <Input name={field.name} onBlur={field.onBlur} ref={field.ref} type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => field.onChange(event.target.files)} />} />
+                <Button type="submit" disabled={saving}>{saving ? <>Saving... <Spinner /></> : "Save Changes"}</Button>
+            </form>
         </div>
     );
 }

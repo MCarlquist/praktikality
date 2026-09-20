@@ -155,7 +155,7 @@ function ActionsCell({ row, onUpdate, onNotify }: {
                             </Field>
                         </FieldGroup>
                         <DialogFooter>
-                            <Button variant="destructive" onClick={() => setOpen(false)} type="reset">No</Button>
+                            <Button variant="destructive" onClick={() => { setWantInternship(row.original.want_internship); setOpen(false); }} type="reset">No</Button>
                             <Button type="submit">Yes</Button>
                         </DialogFooter>
                     </form>

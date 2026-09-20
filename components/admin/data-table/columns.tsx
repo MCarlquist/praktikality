@@ -47,12 +47,18 @@ export const columns: ColumnDef<CompanyTableData>[] = [
     header: 'Antal på praktik',
     cell: ({ row }) => {
       const deltagare = row.original.deltagare;
-      return deltagare ? deltagare.length : '-';
+      return deltagare ? deltagare.length : '0';
     }
   },
   {
     accessorKey: 'antal_intresserade',
-    header: 'Antal intresserade'
+    header: 'Antal intresserade',
+    cell: ({ row }) => {
+      const howMany = row.original.antal_intresserade;
+      console.log(howMany);
+      return howMany ? howMany.length : '0';
+      
+    },
   },
   {
     id: "actions",

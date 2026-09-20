@@ -203,9 +203,31 @@ export async function PUT(request: Request) {
 
     try {
         const { company_name, userBody } = await request.json();
-        const deltagareArray = [
-            { name: userBody.name, email: userBody.email }
-        ];
+        const initials = typeof userBody?.initials === "string"
+            ? userBody.initials.trim()
+            : "";
+
+        if (!company_name || !initials) {
+            return NextResponse.json(
+                { error: "Company name and participant initials are required" },
+                { status: 400 },
+            );
+            
+        }
+
+        const { data: company, error: companyError } = await supabase
+            .from("companies")
+            .select("deltagare")
+            .eq("company_name", company_name)
+            .single();
+
+        if (companyError) {
+            return NextResponse.json({ error: companyError.message }, { status: 404 });
+        }
+
+        const deltagareArray = Array.from(
+            new Set([...(company.deltagare ?? []), initials]),
+        );
 
         const { data, error } = await supabase
             .from('companies')

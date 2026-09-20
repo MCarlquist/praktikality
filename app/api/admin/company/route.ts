@@ -212,6 +212,7 @@ export async function PUT(request: Request) {
                 { error: "Company name and participant initials are required" },
                 { status: 400 },
             );
+            
         }
 
         const { data: company, error: companyError } = await supabase

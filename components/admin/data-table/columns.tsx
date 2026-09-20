@@ -55,7 +55,6 @@ export const columns: ColumnDef<CompanyTableData>[] = [
     header: 'Antal intresserade',
     cell: ({ row }) => {
       const howMany = row.original.antal_intresserade;
-      console.log(howMany);
       return howMany ? howMany.length : '0';
       
     },

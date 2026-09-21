@@ -212,7 +212,6 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                 setDescription(result.company.description);
 
                 const supabase = createClient();
-                console.log("Logo path from database:", result.company.logo_path);
                 if (result.company.logo_path) {
                     const { data: imageData, error: imageError } = await supabase
                         .storage

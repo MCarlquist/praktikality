@@ -117,7 +117,7 @@ export const columns: ColumnDef<CompanyTableData>[] = [
             <DropdownMenuItem
               onClick={() => Router.redirect(`/admin/company/${company_name}`, RedirectType.push)}
             >
-              View Company Details
+              Redigera Företag
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setOpen(true)}>
               Lägg till deltagare i praktik

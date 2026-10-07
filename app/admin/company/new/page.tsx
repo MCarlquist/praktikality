@@ -98,6 +98,58 @@ export default function NewCompanyPage() {
         {value: 'liquid', label: 'liquid' },
         {value: 'graphql', label: 'GraphQl' },
         {value: 'shoppify_cli', label: 'Shoppify CLI' },
+        {value: 'fortinet', label: 'Fortinet' },
+        {value: 'ubiquiti', label: 'Ubiquiti' },
+        {value: 'microsoft_365', label: 'Microsoft 365' },
+        {value: 'microsoft_azure', label: 'Microsoft Azure' },
+        {value: 'nestjs', label: 'NestJS' },
+        {value: 'typeorm', label: 'TypeORM' },
+        {value: 'jest', label: 'Jest' },
+        {value: 'trello', label: 'Trello' },
+        {value: 'protocols_tcp_ip', label: 'Protocols TCP/IP' },
+        {value: 'mqtt', label: 'MQTT' },
+        {value: 'computer_vision', label: 'Computer Vision' },
+        {value: 'ml_tensorflow', label: 'ML Tensorflow' },
+        {value: 'pytorch', label: 'Py Torch' },
+        {value: 'time_series_analysis', label: 'Time Series Analysis' },
+        {value: 'arima', label: 'ARIMA' },
+        {value: 'prophet', label: 'Prophet' },
+        {value: 'influxdb', label: 'InfluxDB' },
+        {value: 'grafana', label: 'Grafana' },
+        {value: 'chartjs', label: 'Chart.JS' },
+        {value: 'd3js', label: 'D3.Js' },
+        {value: 'rest_apis', label: 'REST APIs' },
+        {value: 'lidar', label: 'LIDAR' },
+        {value: 'cv_fusion_point', label: 'CV Fusion Point' },
+        {value: 'cloud_processing', label: 'Cloud Processing' },
+        {value: 'sensor_calibration', label: 'Sensor Calibration' },
+        {value: 'integrations', label: 'Integrations' },
+        {value: 'unity', label: 'Unity' },
+        {value: '3d_artist', label: '3D Artist' },
+        {value: 'ui_ux_designer', label: 'UI/UX Designer' },
+        {value: 'version_control', label: 'Version Control' },
+        {value: 'community_management', label: 'Community Management' },
+        {value: 'quality_assurance', label: 'Quality Assurance' },
+        {value: 'fotometri', label: 'Fotometri' },
+        {value: 'game_design', label: 'Game Design' },
+        {value: 'play_testing', label: 'Play Testing' },
+        {value: 'json', label: 'JSON' },
+        {value: 'sql', label: 'SQL' },
+        {value: 'xml', label: 'XML' },
+        {value: 'power_bi', label: 'Power BI' },
+        {value: 'microsoft_intune', label: 'Microsoft Intune' },
+        {value: 'hadoop', label: 'Hadoop' },
+        {value: 'spark', label: 'Spark' },
+        {value: 'blazor', label: 'Blazor' },
+        {value: 'razor', label: 'Razor' },
+        {value: 'bootstrap', label: 'Bootstrap' },
+        {value: 'linux', label: 'Linux' },
+        {value: 'e_handel', label: 'E-handel' },
+        {value: 'scss', label: 'SCSS' },
+        {value: 'video', label: 'Video' },
+        {value: 'tiktok', label: 'TikTok' },
+        {value: 'instagram', label: 'Instagram' },
+        {value: 'facebook', label: 'Facebook' },
     ];
 
     const { control, handleSubmit, formState: { errors } } = useForm<InputFormValues>({
@@ -124,6 +176,9 @@ export default function NewCompanyPage() {
         { label: "Skola", value: "school" },
         { label: "SaaS", value: "saas" },
         { label: "TV Spel", value: "videogame" },
+        { label: "Stor Företag", value: "big_company" },
+        { label: "Kommunal IT avdelning", value: "kommunal_IT_Avdelning" },
+        { label: "Byrå", value: "byrå" },
     ]
 
 
@@ -286,6 +341,10 @@ export default function NewCompanyPage() {
                         <div className="flex items-center gap-3">
                             <RadioGroupItem value="corporation" id="t3" />
                             <Label htmlFor="t3">Corporation</Label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            <RadioGroupItem value="kommunal" id="t3" />
+                            <Label htmlFor="t3">Kommunal</Label>
                         </div>
                     </RadioGroup>)}
                 />

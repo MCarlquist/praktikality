@@ -110,7 +110,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
     };
 
     // Send data to AI with languages of the company to paint on projekt ideas.
-    const generateAI =  async () => {
+    const generateAI = async () => {
         setGeneratingAI(true);
         setLoadedAI(false);
         try {
@@ -124,14 +124,14 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     type: speciality
                 })
             });
-            if(!aiAPI.ok) {
+            if (!aiAPI.ok) {
                 throw new Error(`Request failed: ${aiAPI.status}`);
             }
 
             const data = await aiAPI.json();
             setAIContent(data.message);
             setLoadedAI(true);
-            
+
         } catch (error) {
             console.error('error generating AI content: ', error);
         } finally {
@@ -151,19 +151,23 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
 
         const setSpecialityFn = (speciality: string) => {
             switch (speciality) {
-                    case 'saas':
-                        return 'SaaS';
-                    case 'ecommerce':
-                        return 'E-Handel';
-                    case 'consulting':
-                        return 'Konsult Bolag';
-                    case 'school':
-                        return 'Skola';
-                    case 'videogame':
-                        return 'Tv Spel';
-                    default:
-                        return 'inte angivet';
-                }
+                case 'saas':
+                    return 'SaaS';
+                case 'ecommerce':
+                    return 'E-Handel';
+                case 'consulting':
+                    return 'Konsult Bolag';
+                case 'school':
+                    return 'Skola';
+                case 'videogame':
+                    return 'Tv Spel';
+                case 'kommunal':
+                    return 'Kommunal';
+                case 'byrå':
+                    return 'Byrå';
+                default:
+                    return 'inte angivet';
+            }
         };
 
         const setWOrkLocationFn = (location: string) => {
@@ -187,6 +191,10 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     return 'Koncern'
                 case 'startup':
                     return 'Startup'
+                case 'kommunal':
+                    return 'Kommunal';
+                case 'byrå':
+                    return 'Byrå';
                 default:
                     return 'inte angivet'
             }
@@ -217,11 +225,11 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                         .storage
                         .from("company-logos")
                         .createSignedUrl(result.company.logo_path, 60 * 60);
-                        
+
                     if (imageError) {
                         throw new Error(`Unable to load company logo: ${imageError.message}`);
                     }
-                    
+
 
                     setImage(imageData.signedUrl);
                 }
@@ -347,15 +355,15 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
             <section className="mt-4">
                 <div className="text-center flex flex-col gap-4">
                     <p className="font-bold text-center">Låter detta intressant? Klicka på knappen nedan för att generera projekt idéer.</p>
-                <Button onClick={generateAI} disabled={generatingAI}>Generera Idéer</Button>
+                    <Button onClick={generateAI} disabled={generatingAI}>Generera Idéer</Button>
                 </div>
                 {loadedAI ?
-                 <article className="mt-6">
-                    <p className="text-3xl text-center">Projekt Idéer:</p>
-                    <Markdown>{aiContent}</Markdown>
-                </article>
-                
-                : generatingAI ? <div className="flex flex-col justify-center items-center mt-5"><Spinner className="size-8" /> Skapar Idéer</div> : null}
+                    <article className="mt-6">
+                        <p className="text-3xl text-center">Projekt Idéer:</p>
+                        <Markdown>{aiContent}</Markdown>
+                    </article>
+
+                    : generatingAI ? <div className="flex flex-col justify-center items-center mt-5"><Spinner className="size-8" /> Skapar Idéer</div> : null}
             </section>
         </div>
     );

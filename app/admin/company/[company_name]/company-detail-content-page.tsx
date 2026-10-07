@@ -28,7 +28,7 @@ type InputFormValues = {
     description: string;
 };
 
-const programmingLanguages = ["React", "Vue.js", "Angular", "Svelte", "Django", "Flask", "Ruby on Rails", "Spring", "Laravel", "Express.js", "ASP.NET", "Flutter", "React Native", "Swift", "Kotlin", "Java", "Python", "JavaScript", "TypeScript", "C#", "C++", "Go", "Rust", "GitHub", "HTML", "CSS", "C", "Node.js", "PHP", "AWS", "Fairgate", "MySQL", "Docker", "Microservices", "JSX", "Wordpress", "Jquery", "Raspberry Pi", "Arduino", "JetPack Compose", "UI Kit", "Xcode", "Objective C", "MongoDB", "Command Line", "liquid", "GraphQl", "Shoppify CLI"].map((label) => ({
+const programmingLanguages = ["React", "Vue.js", "Angular", "Svelte", "Django", "Flask", "Ruby on Rails", "Spring", "Laravel", "Express.js", "ASP.NET", "Flutter", "React Native", "Swift", "Kotlin", "Java", "Python", "JavaScript", "TypeScript", "C#", "C++", "Go", "Rust", "GitHub", "HTML", "CSS", "C", "Node.js", "PHP", "AWS", "Fairgate", "MySQL", "Docker", "Microservices", "JSX", "Wordpress", "Jquery", "Raspberry Pi", "Arduino", "JetPack Compose", "UI Kit", "Xcode", "Objective C", "MongoDB", "Command Line", "liquid", "GraphQl", "Shoppify CLI", "Fortinet", "Ubiquiti", "Microsoft 365", "Microsoft Azure", "NestJS", "TypeORM", "Jest", "Docker", "Trello", "Protocols TCP/IP", "MQTT", "Computer Vision", "ML Tensorflow", "Py Torch", "Time Series Analysis", "ARIMA", "Prophet", "InfluxDB", "Grafana", "Chart.JS", "D3.js", "REST APIs", "LIDAR", "CV Fusion Point", "Cloud Processing", "Sensor Calibration", "Unity", "3D Artist", "UI/UX Designer", "Version Control", "Community Management", "Quality Assurance", "Fotometri", "Game Design", "Play Testing", "JSON", "SQL", "XML", "Power BI", "Microsoft Intune", "Hadoop", "Spark", "Blazor", "Razor", "Bootstrap", "Linux", "E-handel", "Video", "TikTok", "Instagram", "Facebook"].map((label) => ({
     value: label.toLowerCase().replace(/[^a-z0-9]+/g, "_"),
     label,
 }));
@@ -39,6 +39,9 @@ const specialities = [
     { label: "Skola", value: "school" },
     { label: "SaaS", value: "saas" },
     { label: "TV Spel", value: "videogame" },
+    { label: "Stor Företag", value: "big_company" },
+    { label: "Kommunal IT avdelning", value: "kommunal_IT_Avdelning" },
+    { label: "Byrå", value: "byrå" },
 ];
 
 export default function CompanyDetailContent({ companyName }: { companyName: string }) {

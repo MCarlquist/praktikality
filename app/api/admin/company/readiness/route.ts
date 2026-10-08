@@ -3,19 +3,13 @@ import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 export async function PATCH(request: Request) {
   try {
-    const { id, ready_for_intern } = await request.json();
-
-    if (!Number.isInteger(id) || typeof ready_for_intern !== "boolean") {
-      return NextResponse.json(
-        { success: false, error: "A valid company id and readiness value are required" },
-        { status: 400 },
-      );
-    }
+    const { id, updatedCompany } = await request.json();
+    
 
     const supabase = await createServerSupabaseClient();
     const { data, error } = await supabase
       .from("companies")
-      .update({ ready_for_intern })
+      .update({ ready_for_intern: updatedCompany.ready_for_intern })
       .eq("id", id)
       .select("id, ready_for_intern")
       .maybeSingle();

@@ -1,4 +1,4 @@
-import { client } from "@/lib/huggingface";
+import { client } from "@/lib/openRouter";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     requestTimestamps.set(user.id, [...recentRequests, now]);
 
     const chatCompletion = await client.chat.completions.create({
-        model: "deepseek-ai/DeepSeek-V4-Flash-0731:novita",
+        model: "z-ai/glm-5.3",
         messages: [
             {
                 role: "user",
@@ -75,6 +75,7 @@ export async function POST(request: Request) {
                 `,
             },
         ],
+        stream: false,
     });
 
     return Response.json({

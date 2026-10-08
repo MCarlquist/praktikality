@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
@@ -21,14 +21,18 @@ export type Database = {
           company_name: string
           company_site: string | null
           company_size: string | null
+          company_speciality: string | null
           company_type: string | null
           created_at: string
           deltagare: string[] | null
+          description: string | null
           have_intern: string | null
           id: number
           location: string | null
+          logo_path: string | null
           programming_languages: string[] | null
-          remote: string | null
+          ready_for_intern: boolean
+          work_location: string | null
         }
         Insert: {
           antal_intresserade?: string[] | null
@@ -36,14 +40,18 @@ export type Database = {
           company_name?: string
           company_site?: string | null
           company_size?: string | null
+          company_speciality?: string | null
           company_type?: string | null
           created_at?: string
           deltagare?: string[] | null
+          description?: string | null
           have_intern?: string | null
           id?: number
           location?: string | null
+          logo_path?: string | null
           programming_languages?: string[] | null
-          remote?: string | null
+          ready_for_intern?: boolean
+          work_location?: string | null
         }
         Update: {
           antal_intresserade?: string[] | null
@@ -51,14 +59,30 @@ export type Database = {
           company_name?: string
           company_site?: string | null
           company_size?: string | null
+          company_speciality?: string | null
           company_type?: string | null
           created_at?: string
           deltagare?: string[] | null
+          description?: string | null
           have_intern?: string | null
           id?: number
           location?: string | null
+          logo_path?: string | null
           programming_languages?: string[] | null
-          remote?: string | null
+          ready_for_intern?: boolean
+          work_location?: string | null
+        }
+        Relationships: []
+      }
+      healthcheck: {
+        Row: {
+          id: number
+        }
+        Insert: {
+          id: number
+        }
+        Update: {
+          id?: number
         }
         Relationships: []
       }
@@ -67,6 +91,7 @@ export type Database = {
           companies_they_work_at: string[] | null
           email: string
           id: string
+          initials: string
           role: string
           want_internship: boolean | null
         }
@@ -74,13 +99,15 @@ export type Database = {
           companies_they_work_at?: string[] | null
           email: string
           id?: string
-          role: string
+          initials?: string
+          role?: string
           want_internship?: boolean | null
         }
         Update: {
           companies_they_work_at?: string[] | null
           email?: string
           id?: string
+          initials?: string
           role?: string
           want_internship?: boolean | null
         }
@@ -91,7 +118,9 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_auth_uid: { Args: never; Returns: string }
+      get_auth_user_role: { Args: never; Returns: string }
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
@@ -110,12 +139,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -139,11 +168,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -164,11 +193,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -189,11 +218,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -206,11 +235,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

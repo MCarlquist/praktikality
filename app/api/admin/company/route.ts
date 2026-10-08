@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
         if (q && q.trim().length > 0) {
             // Use ilike for case-insensitive partial match
-            const { data: companies, error } = await supabase.from('companies').select('*').ilike('company_name', `%${q}%`);
+            const { data: companies, error } = await supabase.from('companies').select('*').ilike('company_name', `%${q}%`).eq('ready_for_intern', true);
             if (error) {
                 console.log('supabase search error', error);
                 return NextResponse.json({ error: error.message }, { status: 500 });

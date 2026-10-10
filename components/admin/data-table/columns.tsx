@@ -67,7 +67,7 @@ export const columns: ColumnDef<CompanyTableData>[] = [
     header: 'Redo För Praktikanter',
     cell: ({ row }) => {
       const answer = row.original.ready_for_intern;
-      return answer ? 'Ja': 'Nej';
+      return answer ? <span className="text-green-700">Ja</span>: <span className="text-red-700">Nej</span>;
 
     },
   },

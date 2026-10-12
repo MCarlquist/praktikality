@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
 import { Badge } from "@/components/ui/badge";
 
 type Company = {
@@ -15,6 +14,110 @@ type Company = {
   deltagare?: string[] | null;
   location?: string | null;
   remote?: boolean | null;
+  work_location?: string | null;
+};
+
+const languageLabels: Record<string, string> = {
+  react: "React",
+  vue: "Vue.js",
+  angular: "Angular",
+  svelte: "Svelte",
+  django: "Django",
+  flask: "Flask",
+  ruby_on_rails: "Ruby on Rails",
+  spring: "Spring",
+  laravel: "Laravel",
+  express: "Express.js",
+  asp_net: "ASP.NET",
+  flutter: "Flutter",
+  react_native: "React Native",
+  swift: "Swift",
+  kotlin: "Kotlin",
+  java: "Java",
+  python: "Python",
+  javascript: "JavaScript",
+  typescript: "TypeScript",
+  c_sharp: "C#",
+  c_plus_plus: "C++",
+  go: "Go",
+  rust: "Rust",
+  github: "GitHub",
+  html: "HTML",
+  css: "CSS",
+  c: "C",
+  nodejs: "Node.js",
+  php: "PHP",
+  aws: "AWS",
+  fairgate: "Fairgate",
+  mysql: "MySQL",
+  docker: "Docker",
+  microservices: "Microservices",
+  jsx: "JSX",
+  wordpress: "Wordpress",
+  jquery: "Jquery",
+  raspberry_pi: "Raspberry Pi",
+  arduino: "Arduino",
+  jetpack_compose: "JetPack Compose",
+  ui_kit: "UI Kit",
+  xcode: "Xcode",
+  objective_c: "Objective C",
+  mongodb: "MongoDB",
+  command_line: "Command Line",
+  liquid: "liquid",
+  graphql: "GraphQl",
+  shoppify_cli: "Shoppify CLI",
+  fortinet: "Fortinet",
+  ubiquiti: "Ubiquiti",
+  microsoft_365: "Microsoft 365",
+  microsoft_azure: "Microsoft Azure",
+  nestjs: "NestJS",
+  typeorm: "TypeORM",
+  jest: "Jest",
+  trello: "Trello",
+  protocols_tcp_ip: "Protocols TCP/IP",
+  mqtt: "MQTT",
+  computer_vision: "Computer Vision",
+  ml_tensorflow: "ML Tensorflow",
+  pytorch: "Py Torch",
+  time_series_analysis: "Time Series Analysis",
+  arima: "ARIMA",
+  prophet: "Prophet",
+  influxdb: "InfluxDB",
+  grafana: "Grafana",
+  chartjs: "Chart.JS",
+  d3js: "D3.Js",
+  rest_apis: "REST APIs",
+  lidar: "LIDAR",
+  cv_fusion_point: "CV Fusion Point",
+  cloud_processing: "Cloud Processing",
+  sensor_calibration: "Sensor Calibration",
+  integrations: "Integrations",
+  unity: "Unity",
+  "3d_artist": "3D Artist",
+  ui_ux_designer: "UI/UX Designer",
+  version_control: "Version Control",
+  community_management: "Community Management",
+  quality_assurance: "Quality Assurance",
+  fotometri: "Fotometri",
+  game_design: "Game Design",
+  play_testing: "Play Testing",
+  json: "JSON",
+  sql: "SQL",
+  xml: "XML",
+  power_bi: "Power BI",
+  microsoft_intune: "Microsoft Intune",
+  hadoop: "Hadoop",
+  spark: "Spark",
+  blazor: "Blazor",
+  razor: "Razor",
+  bootstrap: "Bootstrap",
+  linux: "Linux",
+  e_handel: "E-handel",
+  scss: "SCSS",
+  video: "Video",
+  tiktok: "TikTok",
+  instagram: "Instagram",
+  facebook: "Facebook",
 };
 
 export default function SearchResults({ results }: { results: Company[] }) {
@@ -42,15 +145,18 @@ export default function SearchResults({ results }: { results: Company[] }) {
   }
 
   function getRemoteBadge(remote?: boolean | string | null): {
-    variant: "secondary" | "outline";
-    label: string;
+    variant: "secondary" | "outline" | "default" | "destructive";
+    label: any;
   } {
-    
-    if (remote === 'yes') {
-      return { variant: "secondary", label: "På Distans" };
+    switch (remote) {
+      case 'hybrid':
+        return { variant: 'default', label: remote }
+      case 'distans':
+        return { variant: 'outline', label: remote }
+      case 'on-site':
+        return { variant: 'secondary', label: 'På plats' }
     }
-
-    return { variant: "outline", label: "På Plats" };
+    return { variant: "default", label: remote };
   }
 
   return (
@@ -61,7 +167,7 @@ export default function SearchResults({ results }: { results: Company[] }) {
           const top = langs.slice(0, 3);
           const remaining = Math.max(0, langs.length - top.length);
           const participantCount = (c.deltagare ?? []).length;
-          const remoteBadge = getRemoteBadge(c.remote);
+          const remoteBadge = getRemoteBadge(c.work_location);
 
           return (
             <li key={c.id} className="px-4 py-3 hover:bg-muted">
@@ -76,7 +182,9 @@ export default function SearchResults({ results }: { results: Company[] }) {
                     {top.length > 0 ? (
                       <>
                         {top.map((l) => (
-                          <Badge key={l} variant="outline" className="text-sm">{l}</Badge>
+                          <Badge key={l} variant="outline" className="text-sm">
+                            {languageLabels[l] ?? l}
+                          </Badge>
                         ))}
                         {remaining > 0 && <span className="text-xs text-muted-foreground">+{remaining} more</span>}
                       </>

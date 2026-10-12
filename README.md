@@ -389,8 +389,7 @@ At a high level, Praktikality follows this architecture:
              └────────────┘ └─────┬─────┘ └──────┬──────┘
                                    │              │
                                    ▼              ▼
-                            Hugging Face        Resend
-                              Inference
+                                   NVIDIA
 ```
 
 ---
@@ -410,7 +409,7 @@ At a high level, Praktikality follows this architecture:
 | Forms | React Hook Form |
 | Tables | TanStack React Table |
 | AI integration | OpenAI SDK |
-| AI inference | Hugging Face |
+| AI inference | NVIDIA |
 | Email | Resend |
 | Markdown | React Markdown |
 | Icons | Lucide React |
@@ -579,7 +578,7 @@ Example:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
-HUGGING_FACE_TOKEN=
+NVIDIA=
 RESEND_API_KEY=
 ```
 

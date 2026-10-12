@@ -148,6 +148,7 @@ export default function SearchResults({ results }: { results: Company[] }) {
     variant: "secondary" | "outline" | "default" | "destructive";
     label: any;
   } {
+    
     switch (remote) {
       case 'hybrid':
         return { variant: 'default', label: remote }

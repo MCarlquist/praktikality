@@ -72,6 +72,7 @@ export async function POST(request: Request) {
                 I need them in a numbered list. the programming languages I need ideas for are: ${languages.join(", ")}
                 and the type of company's focus is ${type.trim()}.
                 I only want the response in markdown.
+                I want each project idea's title to be clearly marked and distinguishable.  
                 `,
             },
         ],

@@ -36,7 +36,6 @@ function ActionsCell({ row, onUpdate, onNotify }: {
     const [open, setOpen] = useState(false);
     const [wantInternship, setWantInternship] = useState<boolean>(row.original.want_internship ?? false);
     const { initials, companies_they_work_at } = row.original;
-    console.log(row.original);
     
 
     // convert companies_they_work_at (array of JSON strings) into an array of objects
@@ -83,15 +82,24 @@ function ActionsCell({ row, onUpdate, onNotify }: {
 
 
     const deleteUser = async () => {
-        const response = await fetch(`/api/admin/users?user=${row.original.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        const data = await response.json();
-        if (data.success) {
+        try {
+            const params = new URLSearchParams({ user: row.original.id });
+            const response = await fetch(`/api/admin/users?${params}`, {
+                method: 'DELETE',
+            });
+            const data = await response.json();
+            if (!response.ok || !data.success) {
+                throw new Error(data.error ?? 'Failed to delete user');
+            }
+
             onUpdate?.();
+            onNotify?.("success", `Successfully deleted ${initials}`);
+        } catch (error) {
+            console.error('Failed to delete user:', error);
+            onNotify?.(
+                "error",
+                error instanceof Error ? error.message : 'Kunde inte ta bort användaren. Försök igen.',
+            );
         }
     }
 
@@ -172,7 +180,7 @@ export const userColumns: ColumnDef<UserTableData>[] = [
     },
     {
         accessorKey: "want_internship",
-        header: 'Vill ut på praktik?',
+        header: 'Redp för praktik?',
         cell: ({ row }) => {
             const answer = row.original.want_internship;
             return answer ? 'Ja' : 'Nej';

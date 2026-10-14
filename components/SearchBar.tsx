@@ -5,13 +5,22 @@ import { Input } from "@/components/ui/input";
 import { Field } from "./ui/field";
 import { Button } from "./ui/button";
 import { SearchIcon } from "lucide-react";
-import SearchResults from "./SearchResults";
+import SearchResults, { languageLabels, type Company } from "./SearchResults";
 
 export function SeachBar() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [results, setResults] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
+
+  const toggleLanguage = (language: string) => {
+    setSelectedLanguages((selected) =>
+      selected.includes(language)
+        ? selected.filter((item) => item !== language)
+        : [...selected, language],
+    );
+  };
 
   useEffect(() => {
     if (debounceRef.current) {
@@ -22,8 +31,13 @@ export function SeachBar() {
     setLoading(true);
     debounceRef.current = window.setTimeout(async () => {
       try {
-        const url = query ? `/api/admin/company?q=${encodeURIComponent(query)}` : `/api/admin/company`;
-        const res = await fetch(url);
+        const params = new URLSearchParams();
+        if (query.trim()) {
+          params.set("q", query.trim());
+        }
+        selectedLanguages.forEach((language) => params.append("language", language));
+        const search = params.toString();
+        const res = await fetch(search ? `/api/admin/company?${search}` : "/api/admin/company");
         if (!res.ok) {
           setResults([]);
         } else {
@@ -41,7 +55,7 @@ export function SeachBar() {
     return () => {
       if (debounceRef.current) window.clearTimeout(debounceRef.current);
     };
-  }, [query]);
+  }, [query, selectedLanguages]);
 
   return (
     <div className="w-full">
@@ -64,6 +78,40 @@ export function SeachBar() {
           <SearchIcon size={28} />
         </Button>
       </Field>
+      <div className="w-full max-w-3xl mx-auto mt-3 text-left">
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <span className="text-sm font-medium">
+            Filtrera efter programmeringstaggar
+          </span>
+          {selectedLanguages.length > 0 && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedLanguages([])}
+            >
+              Rensa filter
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {Object.entries(languageLabels).map(([value, label]) => {
+            const selected = selectedLanguages.includes(value);
+            return (
+              <Button
+                key={value}
+                type="button"
+                variant={selected ? "default" : "outline"}
+                size="sm"
+                aria-pressed={selected}
+                onClick={() => toggleLanguage(value)}
+              >
+                {label}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
       {loading && <div className="text-sm text-muted-foreground mt-2">Söker...</div>}
       <SearchResults results={results} />
     </div>

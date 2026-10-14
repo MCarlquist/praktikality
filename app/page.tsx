@@ -29,11 +29,11 @@ export default function Home() {
         <div className="flex-1 flex flex-col gap-20 max-w-5xl p-5">
           <Hero />
           <main className="flex-1 flex flex-col gap-6">
-            <h1 className="text-5xl font-bold text-center">Där ambition möter möjlighet: AI-drivna projektidéer och smidiga projekt idéer för CodeX-deltagare.</h1>
+            <h1 className="text-5xl font-bold text-center">Där ambition möter möjlighet: AI-drivna projektidéer för Code_X deltagare.</h1>
             <h3 className="text-3xl text-center">Så fungerar Praktikality – från första idé till verklig praktikplats</h3>
             <section className="grid grid-cols-2 grid-rows-4 gap-10">
               <article className="col-span-1">
-                <p className="font-semibold">Praktikality är en intern plattform utvecklad för CodeX som hjälper unga programmerare att upptäcka relevanta partnerföretag och utforska konkreta möjligheter till praktik och arbetslivserfarenhet. Genom att samla företagsprofiler, teknikstackar och direkta kontaktvägar på ett och samma ställe blir steget ut i techbranschen betydligt enklare och mer tillgängligt för alla deltagare.</p>
+                <p className="font-semibold">Praktikality är en intern plattform utvecklad för Code_X som hjälper unga programmerare att upptäcka relevanta partnerföretag och utforska konkreta möjligheter till praktik och arbetslivserfarenhet. Genom att samla företagsprofiler, teknikstackar och direkta kontaktvägar på ett och samma ställe blir steget ut i techbranschen betydligt enklare och mer tillgängligt för alla deltagare.</p>
               </article>
               <article className="col-span-1 flex justify-center">
                 <Monitor className="w-28 h-auto" />
@@ -45,7 +45,7 @@ export default function Home() {
                 <p className="font-semibold">En av plattformens mest innovativa funktioner är den AI-drivna idégenereringen, som analyserar ett företags teknikstack för att ta fram skräddarsydda och värdefulla projektförslag. Detta hjälper deltagarna att övervinna tröskeln kring vad de faktiskt kan bygga eller bidra med, vilket gör dem till betydligt starkare och mer förberedda kandidater när de söker sig till arbetslivet.</p>
               </article>
               <article className="col-span-1">
-                <p className="font-semibold">När en deltagare hittar ett företag som väcker intresse kan de enkelt markera sitt engagemang med ett klick på ”Ja, Gärna”. Systemet skickar då en automatisk e-postnotis till CodeX personal, som smidigt kan ta vid och koordinera den mänskliga matchningsprocessen mellan deltagaren och företaget.</p>
+                <p className="font-semibold">När en deltagare hittar ett företag som väcker intresse kan de enkelt markera sitt engagemang med ett klick på ”Ja, Gärna”. Systemet skickar då en automatisk e-postnotis till Code_X personal, som smidigt kan ta vid och koordinera den mänskliga matchningsprocessen mellan deltagaren och företaget.</p>
               </article>
               <article className="col-span-1 flex justify-center">
                 <Check className="w-28 h-auto" />

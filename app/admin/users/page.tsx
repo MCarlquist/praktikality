@@ -45,19 +45,8 @@ export default function CompanyAdminPage() {
             <h1 className="text-2xl font-bold text-center">Users</h1>
             <div className="flex flex-col items-center justify-center">
                 <p>Here you can manage users of Praktikality.</p>
-                <ul className="text-sm">
-                    <li>- Add Users</li>
-                    <li>- Edit Users</li>
-                    <li>- Delete Users</li>
-                </ul>
 
             </div>
-            <ButtonGroup className="mx-auto">
-                <Link href="/admin/users/new">
-                    <Button size={'lg'} variant="outline" className="mx-auto flex">Add User</Button>
-                </Link>
-                <Button size={'lg'} variant="link" className="mx-auto flex">Import from Excel</Button>
-            </ButtonGroup>
 
             {isLoading ? (
                 <div> <Spinner className="size-7 mx-auto" /></div>

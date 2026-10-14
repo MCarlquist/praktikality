@@ -59,7 +59,6 @@ export default function CompanyAdminPage() {
                             <Link href="/admin/company/new">
                             <Button size={'lg'} variant="outline" className="mx-auto flex">Add Company</Button>
                             </Link>
-                            <Button size={'lg'} variant="link" className="mx-auto flex">Import from Excel</Button>
                         </ButtonGroup>
                     
                     

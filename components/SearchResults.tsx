@@ -1,9 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { Building2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { createClient } from "@/lib/supabase/client";
 
-type Company = {
+export type Company = {
   id: number;
   company_name: string;
   company_contact?: string | null;
@@ -15,9 +19,10 @@ type Company = {
   location?: string | null;
   remote?: boolean | null;
   work_location?: string | null;
+  logo_path?: string | null;
 };
 
-const languageLabels: Record<string, string> = {
+export const languageLabels: Record<string, string> = {
   react: "React",
   vue: "Vue.js",
   angular: "Angular",
@@ -121,6 +126,46 @@ const languageLabels: Record<string, string> = {
 };
 
 export default function SearchResults({ results }: { results: Company[] }) {
+  const [logoUrls, setLogoUrls] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    const supabase = createClient();
+
+    const fetchLogoUrls = async () => {
+      const entries = await Promise.all(
+        results
+          .filter((company) => company.logo_path)
+          .map(async (company): Promise<[number, string] | null> => {
+            const logoPath = company.logo_path;
+            if (!logoPath) {
+              return null;
+            }
+
+            const { data, error } = await supabase.storage
+              .from("company-logos")
+              .createSignedUrl(logoPath, 60 * 60);
+
+            if (error) {
+              console.error(`Unable to load logo for ${company.company_name}:`, error);
+              return null;
+            }
+
+            return [company.id, data.signedUrl];
+          }),
+      );
+
+      if (!cancelled) {
+        setLogoUrls(Object.fromEntries(entries.filter((entry) => entry !== null)));
+      }
+    };
+
+    void fetchLogoUrls();
+    return () => {
+      cancelled = true;
+    };
+  }, [results]);
+
   if (!results || results.length === 0) {
     return null;
   }
@@ -169,10 +214,24 @@ export default function SearchResults({ results }: { results: Company[] }) {
           const remaining = Math.max(0, langs.length - top.length);
           const participantCount = (c.deltagare ?? []).length;
           const remoteBadge = getRemoteBadge(c.work_location);
+          const logoUrl = logoUrls[c.id];
 
           return (
             <li key={c.id} className="px-4 py-3 hover:bg-muted">
               <Link href={`/company/${encodeURIComponent(String(c.company_name))}`} className="flex items-start justify-between gap-4">
+                <div className="flex w-14 h-14 flex-shrink-0 items-center justify-center overflow-hidden rounded-md border bg-background">
+                  {logoUrl ? (
+                    <Image
+                      src={logoUrl}
+                      alt={`${c.company_name} logo`}
+                      width={112}
+                      height={112}
+                      className="h-full w-full object-contain"
+                    />
+                  ) : (
+                    <Building2 className="h-6 w-6 text-muted-foreground" aria-hidden="true" />
+                  )}
+                </div>
                 <div className="flex-1 flex flex-col">
                   <span className="text-4xl mb-2">{c.company_name}</span>
                   <div className="flex items-center gap-3 justify-center">

@@ -9,19 +9,26 @@ import type { NextRequest } from 'next/server';
 export async function GET(request: NextRequest) {
     const supabase = await createServerSupabaseClient();
     try {
-        const q = request.nextUrl.searchParams.get('q');
+        const q = request.nextUrl.searchParams.get('q')?.trim();
+        const languages = [...new Set(
+            request.nextUrl.searchParams.getAll('language')
+                .map((language) => language.trim())
+                .filter(Boolean),
+        )];
 
-        if (q && q.trim().length > 0) {
-            // Use ilike for case-insensitive partial match
-            const { data: companies, error } = await supabase.from('companies').select('*').ilike('company_name', `%${q}%`);
-            if (error) {
-                console.log('supabase search error', error);
-                return NextResponse.json({ error: error.message }, { status: 500 });
-            }
-            return NextResponse.json({ companies });
+        let query = supabase.from('companies').select('*');
+        if (q) {
+            query = query.ilike('company_name', `%${q}%`);
+        }
+        if (languages.length > 0) {
+            query = query.overlaps('programming_languages', languages);
         }
 
-        let { data: companies, error } = await supabase.from('companies').select('*');
+        const { data: companies, error } = await query;
+        if (error) {
+            console.error('Failed to search companies:', error);
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
 
         return NextResponse.json({ companies });
     } catch (error) {

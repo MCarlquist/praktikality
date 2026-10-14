@@ -234,7 +234,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                     setImage(imageData.signedUrl);
                 }
 
-                // TODO: fetch signed up users to company from database.
+                // fetch signed up users to company from database.
                 const fetchUsers = await fetchSignedUpUsersToCompany();
                 setSignedUpUsers(fetchUsers)
             } catch (err) {
@@ -363,7 +363,7 @@ export default function CompanyDetailContent({ companyName }: { companyName: str
                         <Markdown>{aiContent}</Markdown>
                     </article>
 
-                    : generatingAI ? <div className="flex flex-col justify-center items-center mt-5"><Spinner className="size-8" /> Skapar Idéer</div> : null}
+                    : generatingAI ? <div className="flex flex-col justify-center items-center mt-5"><Spinner className="size-8" /> Skapar Idéer <br /> <span className="text-center">Ha tålamod, det kan ta lite tid.</span></div> : null}
             </section>
         </div>
     );

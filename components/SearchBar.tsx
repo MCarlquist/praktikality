@@ -10,6 +10,7 @@ import SearchResults, { languageLabels, type Company } from "./SearchResults";
 export function SeachBar() {
   const [query, setQuery] = useState("");
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [showAllLanguages, setShowAllLanguages] = useState(false);
   const [results, setResults] = useState<Company[]>([]);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
@@ -21,6 +22,10 @@ export function SeachBar() {
         : [...selected, language],
     );
   };
+  const languageEntries = Object.entries(languageLabels);
+  const visibleLanguages = showAllLanguages
+    ? languageEntries
+    : languageEntries.slice(0, 10);
 
   useEffect(() => {
     if (debounceRef.current) {
@@ -95,7 +100,7 @@ export function SeachBar() {
           )}
         </div>
         <div className="flex flex-wrap gap-2">
-          {Object.entries(languageLabels).map(([value, label]) => {
+          {visibleLanguages.map(([value, label]) => {
             const selected = selectedLanguages.includes(value);
             return (
               <Button
@@ -110,6 +115,19 @@ export function SeachBar() {
               </Button>
             );
           })}
+        </div>
+        <div className="text-center">
+          {languageEntries.length > 10 && (
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="mt-2"
+            onClick={() => setShowAllLanguages((showAll) => !showAll)}
+          >
+            {showAllLanguages ? "Visa Mindre" : "Visa Mera"}
+          </Button>
+        )}
         </div>
       </div>
       {loading && <div className="text-sm text-muted-foreground mt-2">Söker...</div>}
